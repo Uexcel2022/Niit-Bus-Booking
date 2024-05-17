@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Signup {
+public class Signup{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long signupId;

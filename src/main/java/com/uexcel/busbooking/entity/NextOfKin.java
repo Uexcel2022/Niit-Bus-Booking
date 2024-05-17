@@ -11,11 +11,11 @@ public class NextOfKin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nextOfKinId;
-    private String firstName;
-    private String lastName;
+    private String nFirstName;
+    private String nLastName;
     private String address;
-    private String LGA;
-    private String string;
+    private String lga;
+    private String street;
     private String state;
-    private String phoneNumber;
+    private String nPhoneNumber;
 }
