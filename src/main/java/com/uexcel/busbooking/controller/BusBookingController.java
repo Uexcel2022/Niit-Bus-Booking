@@ -1,4 +1,4 @@
-package com.uexcel.busbooking;
+package com.uexcel.busbooking.controller;
 
 import com.uexcel.busbooking.entity.Signup;
 import org.springframework.web.bind.annotation.PatchMapping;
