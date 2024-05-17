@@ -2,11 +2,13 @@ package com.uexcel.busbooking.controller;
 
 import com.uexcel.busbooking.entity.Signup;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BusBookingController {
-    @PatchMapping("/v")
+    @PostMapping("/api/v1/signup")
     public  Signup signup() {
         return  null;
     }
