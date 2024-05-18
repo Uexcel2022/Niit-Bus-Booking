@@ -3,7 +3,7 @@ package com.uexcel.busbooking.service;
 import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
 import com.uexcel.busbooking.entity.NextOfKin;
-import com.uexcel.busbooking.entity.Signup;
+import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import com.uexcel.busbooking.repository.SignupRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class SignupServiceImp implements SignupService {
 
-   private final   SignupRepository signupRepository;
+    private final   SignupRepository signupRepository;
     private final NextOfKinRepository nextOfKinRepository;
 
     public SignupServiceImp(SignupRepository signupRepository,
@@ -23,14 +23,14 @@ public class SignupServiceImp implements SignupService {
         this.signupRepository = signupRepository;
         this.nextOfKinRepository = nextOfKinRepository;
     }
-    public Signup setSignup(RegistrationData registrationData) {
-        Signup signup = new Signup();
+    public User processSignup(RegistrationData registrationData) {
+        User user = new User();
         NextOfKin nextOfKin = new NextOfKin();
-        signup.setFirstName(registrationData.getFirstName());
-        signup.setLastName(registrationData.getLastName());
-        signup.setEmail(registrationData.getEmail());
-        signup.setPassword(registrationData.getPassword());
-        signup.setPhoneNumber(registrationData.getPhoneNumber());
+        user.setFirstName(registrationData.getFirstName());
+        user.setLastName(registrationData.getLastName());
+        user.setEmail(registrationData.getEmail());
+        user.setPassword(registrationData.getPassword());
+        user.setPhoneNumber(registrationData.getPhoneNumber());
         nextOfKin.setNFirstName(registrationData.getNFirstName());
         nextOfKin.setNLastName(registrationData.getNLastName());
         nextOfKin.setAddress(registrationData.getAddress());
@@ -38,26 +38,26 @@ public class SignupServiceImp implements SignupService {
         nextOfKin.setStreet(registrationData.getStreet());
         nextOfKin.setState(registrationData.getState());
         nextOfKin.setNPhoneNumber(registrationData.getNPhoneNumber());
-        signup.setNextOfKin(nextOfKin);
+        user.setNextOfKin(nextOfKin);
         nextOfKinRepository.save(nextOfKin);
-       return signupRepository.save(signup);
+       return signupRepository.save(user);
     }
 
     @Override
-    public Signup getUser(QueryUser queryUser) {
+    public User getUser(QueryUser queryUser) {
         return signupRepository.findByEmail(queryUser.getEmail());
     }
 
     @Override
-    public Signup getUserById(Long id) {
-        Optional<Signup> signup = signupRepository.findById(id);
+    public User getUserById(Long id) {
+        Optional<User> signup = signupRepository.findById(id);
         if (signup.isPresent()) {
             return signup.get();
         }else  throw new NoSuchElementException("User not found");
     }
 
     @Override
-    public List<Signup> findAllUsers() {
+    public List<User> findAllUsers() {
         return signupRepository.findAll();
     }
 
@@ -88,16 +88,16 @@ public class SignupServiceImp implements SignupService {
     }
 
     @Override
-    public Signup updateUser(Long id, Signup updatedSignup) {
-        Optional<Signup> signupOptional = signupRepository.findById(id);
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> signupOptional = signupRepository.findById(id);
         if (signupOptional.isPresent()) {
-            Signup oldSignup = signupOptional.get();
-            oldSignup.setFirstName(updatedSignup.getFirstName());
-            oldSignup.setLastName(updatedSignup.getLastName());
-            oldSignup.setEmail(updatedSignup.getEmail());
-            oldSignup.setPassword(updatedSignup.getPassword());
-            oldSignup.setPhoneNumber(updatedSignup.getPhoneNumber());
-          return signupRepository.save(oldSignup);
+            User oldUser = signupOptional.get();
+            oldUser.setFirstName(updatedUser.getFirstName());
+            oldUser.setLastName(updatedUser.getLastName());
+            oldUser.setEmail(updatedUser.getEmail());
+            oldUser.setPassword(updatedUser.getPassword());
+            oldUser.setPhoneNumber(updatedUser.getPhoneNumber());
+          return signupRepository.save(oldUser);
 
         } else throw new NoSuchElementException("Update failed");
     }

@@ -5,16 +5,19 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Signup{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long signupId;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
-    @Column(unique=true)
+    @Column(unique=true, nullable = false)
     private String email;
-    @Column(unique=true)
+    @Column(unique=true, nullable = false)
     private String phoneNumber;
+    @Column(nullable = false)
     private String password;
 
     @OneToOne(optional = false,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
