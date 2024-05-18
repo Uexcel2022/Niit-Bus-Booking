@@ -44,9 +44,14 @@ public class BusBookingController {
     }
 
     @PostMapping("/api/v1/update_next_of_kin/{id}")
-    public ResponseEntity<Optional<NextOfKin>> updateNextOfKinById(@PathVariable("id") Long id,
+    public ResponseEntity<NextOfKin> updateNextOfKinById(@PathVariable("id") Long id,
                                                                        @RequestBody NextOfKin nextOfKin){
         return ResponseEntity.ok().body(busBookingService.updateNextOfKin(id, nextOfKin));
+    }
+
+    @PostMapping("/api/v1/update_user/{id}")
+    public ResponseEntity<Signup> updateSignup(@PathVariable("id") Long id, @RequestBody Signup signup){
+        return ResponseEntity.ok().body(busBookingService.updateUser(id,signup));
     }
 
 

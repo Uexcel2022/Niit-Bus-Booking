@@ -70,20 +70,36 @@ public class BusBookingServiceImp implements BusBookingService {
     }
 
     @Override
-    public Optional<NextOfKin> updateNextOfKin(Long id,NextOfKin oldNextOfKin) {
+    public NextOfKin updateNextOfKin(Long id, NextOfKin updatedNextOfKin) {
 
         Optional<NextOfKin> nextOfKinOptional = nextOfKinRepository.findById(id);
         if (nextOfKinOptional.isPresent()) {
-            NextOfKin newNextOfKin = nextOfKinOptional.get();
-            newNextOfKin.setNFirstName(oldNextOfKin.getNFirstName());
-            newNextOfKin.setNLastName(oldNextOfKin.getNLastName());
-            newNextOfKin.setAddress(oldNextOfKin.getAddress());
-            newNextOfKin.setLga(oldNextOfKin.getLga());
-            newNextOfKin.setStreet(oldNextOfKin.getStreet());
-            newNextOfKin.setState(oldNextOfKin.getState());
-            newNextOfKin.setNPhoneNumber(oldNextOfKin.getNPhoneNumber());
-            nextOfKinRepository.save(newNextOfKin);
-            return Optional.of(newNextOfKin);
+            NextOfKin oldNextOfKin = nextOfKinOptional.get();
+            oldNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
+            oldNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
+            oldNextOfKin.setAddress(updatedNextOfKin.getAddress());
+            oldNextOfKin.setLga(updatedNextOfKin.getLga());
+            oldNextOfKin.setStreet(updatedNextOfKin.getStreet());
+            oldNextOfKin.setState(updatedNextOfKin.getState());
+            oldNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
+            nextOfKinRepository.save(oldNextOfKin);
+            return oldNextOfKin;
+        } else throw new NoSuchElementException("Update failed");
+    }
+
+    @Override
+    public Signup updateUser(Long id, Signup updatedSignup) {
+
+        Optional<Signup> signupOptional = signupRepository.findById(id);
+        if (signupOptional.isPresent()) {
+            Signup oldSignup = signupOptional.get();
+            oldSignup.setFirstName(updatedSignup.getFirstName());
+            oldSignup.setLastName(updatedSignup.getLastName());
+            oldSignup.setEmail(updatedSignup.getEmail());
+            oldSignup.setPassword(updatedSignup.getPassword());
+            oldSignup.setPhoneNumber(updatedSignup.getPhoneNumber());
+          return signupRepository.save(oldSignup);
+
         } else throw new NoSuchElementException("Update failed");
     }
 }

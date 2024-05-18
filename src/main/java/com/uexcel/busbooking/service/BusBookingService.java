@@ -6,7 +6,6 @@ import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.Signup;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BusBookingService {
     Signup setSignup(RegistrationData registrationData);
@@ -19,5 +18,7 @@ public interface BusBookingService {
 
     NextOfKin getNextOfKinById(Long id);
 
-    Optional<NextOfKin> updateNextOfKin(Long id,NextOfKin nextOfKin);
+    NextOfKin updateNextOfKin(Long id, NextOfKin nextOfKin);
+
+    Signup updateUser(Long id, Signup signup);
 }
