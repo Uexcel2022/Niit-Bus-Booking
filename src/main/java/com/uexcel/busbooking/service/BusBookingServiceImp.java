@@ -49,8 +49,11 @@ public class BusBookingServiceImp implements BusBookingService {
     }
 
     @Override
-    public Optional<Signup> getUserById(Long id) {
-        return signupRepository.findById(id);
+    public Signup getUserById(Long id) {
+        Optional<Signup> signup = signupRepository.findById(id);
+        if (signup.isPresent()) {
+            return signup.get();
+        }else  throw new NoSuchElementException("User not found");
     }
 
     @Override
@@ -59,8 +62,11 @@ public class BusBookingServiceImp implements BusBookingService {
     }
 
     @Override
-    public Optional<NextOfKin> getNextOfKinById(Long id) {
-        return nextOfKinRepository.findById(id);
+    public NextOfKin getNextOfKinById(Long id) {
+        Optional<NextOfKin> nextOfKin = nextOfKinRepository.findById(id);
+        if (nextOfKin.isPresent()) {
+            return nextOfKin.get();
+        }else  throw new NoSuchElementException("next of kin not found");
     }
 
     @Override

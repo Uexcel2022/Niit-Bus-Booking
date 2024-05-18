@@ -13,11 +13,11 @@ public interface BusBookingService {
 
     Signup getUser(QueryUser queryUser);
 
-    Optional<Signup> getUserById(Long id);
+    Signup getUserById(Long id);
 
     List<Signup> findAllUsers();
 
-    Optional<NextOfKin> getNextOfKinById(Long id);
+    NextOfKin getNextOfKinById(Long id);
 
     Optional<NextOfKin> updateNextOfKin(Long id,NextOfKin nextOfKin);
 }

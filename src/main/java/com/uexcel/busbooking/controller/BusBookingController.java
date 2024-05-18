@@ -29,7 +29,7 @@ public class BusBookingController {
     }
 
     @GetMapping("/api/v1/user/{id}")
-    public ResponseEntity<Optional<Signup>> getUserById(@PathVariable("id") Long id){
+    public ResponseEntity<Signup> getUserById(@PathVariable("id") Long id){
         return ResponseEntity.ok(busBookingService.getUserById(id));
     }
 
@@ -39,7 +39,7 @@ public class BusBookingController {
     }
 
     @GetMapping("/api/v1/next_of_kin/{id}")
-    public ResponseEntity<Optional<NextOfKin>> viewNextOfKin(@PathVariable("id") Long id){
+    public ResponseEntity<NextOfKin> viewNextOfKin(@PathVariable("id") Long id){
         return ResponseEntity.ok().body(busBookingService.getNextOfKinById(id));
     }
 

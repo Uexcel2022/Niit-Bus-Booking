@@ -3,8 +3,6 @@ package com.uexcel.busbooking.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Entity
 @Data
 public class Signup{
