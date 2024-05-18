@@ -7,7 +7,7 @@ import com.uexcel.busbooking.entity.Signup;
 
 import java.util.List;
 
-public interface BusBookingService {
+public interface SignupService {
     Signup setSignup(RegistrationData registrationData);
 
     Signup getUser(QueryUser queryUser);

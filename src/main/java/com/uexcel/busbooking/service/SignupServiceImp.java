@@ -13,13 +13,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class BusBookingServiceImp implements BusBookingService {
+public class SignupServiceImp implements SignupService {
 
    private final   SignupRepository signupRepository;
     private final NextOfKinRepository nextOfKinRepository;
 
-    public BusBookingServiceImp(SignupRepository signupRepository,
-                                NextOfKinRepository nextOfKinRepository) {
+    public SignupServiceImp(SignupRepository signupRepository,
+                            NextOfKinRepository nextOfKinRepository) {
         this.signupRepository = signupRepository;
         this.nextOfKinRepository = nextOfKinRepository;
     }
