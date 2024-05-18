@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.service;
 
+import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.Signup;
@@ -37,5 +38,10 @@ public class BusBookingServiceImp implements BusBookingService {
         signup.setNextOfKin(nextOfKin);
         nextOfKinRepository.save(nextOfKin);
        return signupRepository.save(signup);
+    }
+
+    @Override
+    public Signup getUser(QueryUser queryUser) {
+        return signupRepository.findByEmail(queryUser.getEmail());
     }
 }

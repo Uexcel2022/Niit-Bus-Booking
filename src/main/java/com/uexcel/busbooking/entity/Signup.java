@@ -13,10 +13,12 @@ public class Signup{
     private Long signupId;
     private String firstName;
     private String lastName;
+    @Column(unique=true)
     private String email;
+    @Column(unique=true)
     private String phoneNumber;
     private String password;
 
-    @OneToOne(optional = false,fetch = FetchType.EAGER)
+    @OneToOne(optional = false,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private NextOfKin nextOfKin;
 }

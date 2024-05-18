@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.controller;
 
+import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
 import com.uexcel.busbooking.entity.Signup;
 import com.uexcel.busbooking.service.BusBookingService;
@@ -20,5 +21,10 @@ public class BusBookingController {
     @PostMapping("/api/v1/signup")
     public ResponseEntity<Signup> signup(@RequestBody RegistrationData registrationData) {
       return  ResponseEntity.ok().body(busBookingService.setSignup(registrationData));
+    }
+
+    @PostMapping("/api/v1/fetch_user_email")
+    public ResponseEntity<Signup> getUser(@RequestBody QueryUser queryUser){
+        return ResponseEntity.ok(busBookingService.getUser(queryUser));
     }
 }
