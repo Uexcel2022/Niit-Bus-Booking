@@ -9,6 +9,7 @@ import com.uexcel.busbooking.repository.SignupRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -55,5 +56,28 @@ public class BusBookingServiceImp implements BusBookingService {
     @Override
     public List<Signup> findAllUsers() {
         return signupRepository.findAll();
+    }
+
+    @Override
+    public Optional<NextOfKin> getNextOfKinById(Long id) {
+        return nextOfKinRepository.findById(id);
+    }
+
+    @Override
+    public Optional<NextOfKin> updateNextOfKin(Long id,NextOfKin oldNextOfKin) {
+
+        Optional<NextOfKin> nextOfKinOptional = nextOfKinRepository.findById(id);
+        if (nextOfKinOptional.isPresent()) {
+            NextOfKin newNextOfKin = nextOfKinOptional.get();
+            newNextOfKin.setNFirstName(oldNextOfKin.getNFirstName());
+            newNextOfKin.setNLastName(oldNextOfKin.getNLastName());
+            newNextOfKin.setAddress(oldNextOfKin.getAddress());
+            newNextOfKin.setLga(oldNextOfKin.getLga());
+            newNextOfKin.setStreet(oldNextOfKin.getStreet());
+            newNextOfKin.setState(oldNextOfKin.getState());
+            newNextOfKin.setNPhoneNumber(oldNextOfKin.getNPhoneNumber());
+            nextOfKinRepository.save(newNextOfKin);
+            return Optional.of(newNextOfKin);
+        } else throw new NoSuchElementException("Update failed");
     }
 }

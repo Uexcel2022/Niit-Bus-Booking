@@ -2,6 +2,7 @@ package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
+import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.Signup;
 
 import java.util.List;
@@ -15,4 +16,8 @@ public interface BusBookingService {
     Optional<Signup> getUserById(Long id);
 
     List<Signup> findAllUsers();
+
+    Optional<NextOfKin> getNextOfKinById(Long id);
+
+    Optional<NextOfKin> updateNextOfKin(Long id,NextOfKin nextOfKin);
 }
