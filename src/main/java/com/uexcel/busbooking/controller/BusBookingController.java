@@ -49,7 +49,7 @@ public class BusBookingController {
     }
 
     @PostMapping("/api/v1/update_user/{id}")
-    public ResponseEntity<Signup> updateSignup(@PathVariable("id") Long id, @RequestBody Signup signup){
+    public ResponseEntity<Signup> updateUser(@PathVariable("id") Long id, @RequestBody Signup signup){
         return ResponseEntity.ok().body(signupService.updateUser(id,signup));
     }
 

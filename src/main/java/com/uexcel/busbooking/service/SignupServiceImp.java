@@ -89,7 +89,6 @@ public class SignupServiceImp implements SignupService {
 
     @Override
     public Signup updateUser(Long id, Signup updatedSignup) {
-
         Optional<Signup> signupOptional = signupRepository.findById(id);
         if (signupOptional.isPresent()) {
             Signup oldSignup = signupOptional.get();
