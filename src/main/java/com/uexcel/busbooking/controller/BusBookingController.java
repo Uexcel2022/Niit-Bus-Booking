@@ -4,12 +4,11 @@ import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
 import com.uexcel.busbooking.entity.Signup;
 import com.uexcel.busbooking.service.BusBookingService;
-import com.uexcel.busbooking.service.BusBookingServiceImp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class BusBookingController {
@@ -24,7 +23,17 @@ public class BusBookingController {
     }
 
     @PostMapping("/api/v1/fetch_user_email")
-    public ResponseEntity<Signup> getUser(@RequestBody QueryUser queryUser){
+    public ResponseEntity<Signup> getUserByEmail(@RequestBody QueryUser queryUser){
         return ResponseEntity.ok(busBookingService.getUser(queryUser));
+    }
+
+    @GetMapping("/api/v1/{id}")
+    public ResponseEntity<Optional<Signup>> getUserById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(busBookingService.getUserById(id));
+    }
+
+    @GetMapping("/api/v1/all_users")
+    public ResponseEntity< List<Signup>> getAllUser(){
+        return ResponseEntity.ok(busBookingService.findAllUsers());
     }
 }

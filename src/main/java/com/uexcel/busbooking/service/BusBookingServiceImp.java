@@ -6,8 +6,10 @@ import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.Signup;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import com.uexcel.busbooking.repository.SignupRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BusBookingServiceImp implements BusBookingService {
@@ -43,5 +45,15 @@ public class BusBookingServiceImp implements BusBookingService {
     @Override
     public Signup getUser(QueryUser queryUser) {
         return signupRepository.findByEmail(queryUser.getEmail());
+    }
+
+    @Override
+    public Optional<Signup> getUserById(Long id) {
+        return signupRepository.findById(id);
+    }
+
+    @Override
+    public List<Signup> findAllUsers() {
+        return signupRepository.findAll();
     }
 }
