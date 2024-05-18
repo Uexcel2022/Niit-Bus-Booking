@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BusBookingController {
     BusBookingService busBookingService;
-    public BusBookingController(){
-        busBookingService = new BusBookingServiceImp();
+    public BusBookingController(BusBookingService busBookingService){
+        this.busBookingService = busBookingService;
     }
 
     @PostMapping("/api/v1/signup")

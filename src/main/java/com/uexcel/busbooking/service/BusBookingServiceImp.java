@@ -10,11 +10,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BusBookingServiceImp implements BusBookingService {
-   @Autowired
-   private  SignupRepository signupRepository;
-    @Autowired
-    NextOfKinRepository nextOfKinRepository;
-    @Override
+
+   private final   SignupRepository signupRepository;
+    private final NextOfKinRepository nextOfKinRepository;
+
+    public BusBookingServiceImp(SignupRepository signupRepository,
+                                NextOfKinRepository nextOfKinRepository) {
+        this.signupRepository = signupRepository;
+        this.nextOfKinRepository = nextOfKinRepository;
+    }
     public Signup setSignup(RegistrationData registrationData) {
         Signup signup = new Signup();
         NextOfKin nextOfKin = new NextOfKin();
@@ -31,6 +35,7 @@ public class BusBookingServiceImp implements BusBookingService {
         nextOfKin.setState(registrationData.getState());
         nextOfKin.setNPhoneNumber(registrationData.getNPhoneNumber());
         signup.setNextOfKin(nextOfKin);
+        nextOfKinRepository.save(nextOfKin);
        return signupRepository.save(signup);
     }
 }
