@@ -12,15 +12,14 @@ public class Bus {
     @Column(nullable = false)
     private String busCode;
     @Column(nullable = false)
-    private String busCapacity;
-    @Column(nullable = false)
-    private String serviceStartDate;
-    @Column(nullable = false)
-    private String serviceEndDate;
-    @Column(nullable = false)
     private String brand;
     @Column(nullable = false)
     private String model;
+    @Column(nullable = false)
+    private int busCapacity;
+    @Column(nullable = false)
+    private String serviceStartDate;
+    private String serviceEndDate;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     private Route route;
