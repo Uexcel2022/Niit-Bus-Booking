@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class BusBookingController {
+public class UserController {
     SignupService signupService;
-    public BusBookingController(SignupService signupService){
+    public UserController(SignupService signupService){
         this.signupService = signupService;
     }
 

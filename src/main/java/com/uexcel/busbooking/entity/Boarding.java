@@ -10,12 +10,12 @@ import java.time.LocalDate;
 public class Boarding {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardingId;
+    private Long boardedId;
 
-    @OneToOne(cascade = CascadeType.DETACH,optional = false)
+    @OneToOne(cascade = CascadeType.PERSIST,optional = false)
     private Booking booking;
 
-    @ManyToOne(cascade = CascadeType.DETACH,optional = false)
+    @ManyToOne(cascade = CascadeType.PERSIST,optional = false)
     private Bus bus;
 
     @Column(nullable = false)

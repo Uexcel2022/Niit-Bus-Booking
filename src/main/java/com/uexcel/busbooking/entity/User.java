@@ -8,7 +8,7 @@ import lombok.Data;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long signupId;
+    private Long userId;
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
@@ -22,4 +22,7 @@ public class User {
 
     @OneToOne(optional = false,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private NextOfKin nextOfKin;
+
+    @OneToOne(optional = false,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private UserWallet userWallet;
 }

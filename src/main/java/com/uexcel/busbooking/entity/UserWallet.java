@@ -6,13 +6,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Entity
 @Data
-public class Route {
+public class UserWallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String routeName;
-    private double price;
+    private Long walletId;
+    private String walletCode = UUID.randomUUID().toString();
+    private double balance;
+    private String status;
 
 }

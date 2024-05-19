@@ -4,8 +4,10 @@ import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
+import com.uexcel.busbooking.entity.UserWallet;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import com.uexcel.busbooking.repository.SignupRepository;
+import com.uexcel.busbooking.repository.UserWalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,20 +19,27 @@ public class SignupServiceImp implements SignupService {
 
     private final   SignupRepository signupRepository;
     private final NextOfKinRepository nextOfKinRepository;
+    private final UserWalletRepository userWalletRepository;
 
     public SignupServiceImp(SignupRepository signupRepository,
-                            NextOfKinRepository nextOfKinRepository) {
+                            NextOfKinRepository nextOfKinRepository,
+                            UserWalletRepository userWalletRepository) {
         this.signupRepository = signupRepository;
         this.nextOfKinRepository = nextOfKinRepository;
+        this.userWalletRepository = userWalletRepository;
     }
     public User processSignup(RegistrationData registrationData) {
+
         User user = new User();
         NextOfKin nextOfKin = new NextOfKin();
+        UserWallet userWallet = new UserWallet();
+
         user.setFirstName(registrationData.getFirstName());
         user.setLastName(registrationData.getLastName());
         user.setEmail(registrationData.getEmail());
         user.setPassword(registrationData.getPassword());
         user.setPhoneNumber(registrationData.getPhoneNumber());
+
         nextOfKin.setNFirstName(registrationData.getNFirstName());
         nextOfKin.setNLastName(registrationData.getNLastName());
         nextOfKin.setAddress(registrationData.getAddress());
@@ -39,6 +48,12 @@ public class SignupServiceImp implements SignupService {
         nextOfKin.setState(registrationData.getState());
         nextOfKin.setNPhoneNumber(registrationData.getNPhoneNumber());
         user.setNextOfKin(nextOfKin);
+
+        userWallet.setBalance(0.0);
+        userWallet.setStatus("active");
+        user.setUserWallet(userWallet);
+
+        userWalletRepository.save(userWallet);
         nextOfKinRepository.save(nextOfKin);
        return signupRepository.save(user);
     }

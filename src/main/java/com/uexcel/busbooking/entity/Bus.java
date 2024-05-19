@@ -22,5 +22,7 @@ public class Bus {
     @Column(nullable = false)
     private String model;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    private Route route;
 
 }
