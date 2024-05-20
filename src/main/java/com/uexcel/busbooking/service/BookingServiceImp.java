@@ -107,6 +107,10 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("Ticket already expired");
         }
 
+        if(booking.getTicketStatus().equals("refund")){
+            throw new RuntimeException("You been refunded on this ticked");
+        }
+
         Bus bus = busRepository.findByBusCode(checkinDto.getBusCode());
 
         if(bus == null) {
