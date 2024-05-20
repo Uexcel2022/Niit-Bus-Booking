@@ -3,6 +3,8 @@ package com.uexcel.busbooking.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 public class Bus {
@@ -18,8 +20,8 @@ public class Bus {
     @Column(nullable = false)
     private int busCapacity;
     @Column(nullable = false)
-    private String serviceStartDate;
-    private String serviceEndDate;
+    private LocalDate serviceStartDate;
+    private LocalDate serviceEndDate;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     private Route route;

@@ -2,6 +2,8 @@ package com.uexcel.busbooking.controller;
 
 import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
+import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.dto.WalletFundingDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.service.SignupService;
@@ -53,6 +55,10 @@ public class UserController {
         return ResponseEntity.ok().body(signupService.updateUser(id, user));
     }
 
+    @PostMapping("/api/v1/fund_wallet")
+    public ResponseEntity<ResponseDto> fundWallet(@RequestBody WalletFundingDto walletFundingDto){
 
+        return ResponseEntity.ok().body(signupService.processWalletFunding(walletFundingDto));
+    }
 
 }

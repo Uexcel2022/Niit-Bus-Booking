@@ -2,12 +2,16 @@ package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
+import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.dto.WalletFundingDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.entity.UserWallet;
+import com.uexcel.busbooking.entity.WalletTransaction;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import com.uexcel.busbooking.repository.UserRepository;
 import com.uexcel.busbooking.repository.UserWalletRepository;
+import com.uexcel.busbooking.repository.WallTransactionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,13 +24,16 @@ public class SignupServiceImp implements SignupService {
     private final UserRepository userRepository;
     private final NextOfKinRepository nextOfKinRepository;
     private final UserWalletRepository userWalletRepository;
+    private final WallTransactionRepository wallTransactionRepository;
 
     public SignupServiceImp(UserRepository userRepository,
                             NextOfKinRepository nextOfKinRepository,
-                            UserWalletRepository userWalletRepository) {
+                            UserWalletRepository userWalletRepository,
+                            WallTransactionRepository wallTransactionRepository) {
         this.userRepository = userRepository;
         this.nextOfKinRepository = nextOfKinRepository;
         this.userWalletRepository = userWalletRepository;
+        this.wallTransactionRepository = wallTransactionRepository;
     }
     public User processSignup(RegistrationData registrationData) {
 
@@ -115,5 +122,30 @@ public class SignupServiceImp implements SignupService {
           return userRepository.save(oldUser);
 
         } else throw new NoSuchElementException("Update failed");
+    }
+
+    @Override
+    public ResponseDto processWalletFunding(WalletFundingDto walletFundingDto) {
+
+        UserWallet userWallet = userWalletRepository.findByWalletCode(walletFundingDto.getWalletCode());
+
+        if (userWallet == null) {
+            throw new NoSuchElementException("Invalid wallet code");
+        }
+            double balance = userWallet.getBalance();
+            double newBalance = balance + walletFundingDto.getAmount();
+            WalletTransaction walletTransaction = new WalletTransaction();
+            walletTransaction.setTransactionType(walletFundingDto.getTransactionType());
+            walletTransaction.setAccountNumber(walletFundingDto.getAccountNumber());
+            walletTransaction.setCCNumber(walletFundingDto.getCCNumber());
+            walletTransaction.setAmount(walletFundingDto.getAmount());
+            userWallet.setBalance(newBalance);
+            walletTransaction.setWallet(userWallet);
+            userWalletRepository.save(userWallet);
+            wallTransactionRepository.save(walletTransaction);
+            ResponseDto responseDto = new ResponseDto();
+            responseDto.setResponse("Transaction successful");
+            return responseDto;
+
     }
 }

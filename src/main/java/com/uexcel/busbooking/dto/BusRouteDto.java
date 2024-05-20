@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class BusRouteDto {
     private String busCode;
     private int busCapacity;
-    private String serviceStartDate = LocalDate.now().toString();
+    private LocalDate serviceStartDate = LocalDate.now();
     private String serviceEndDate;
     private String brand;
     private String model;
