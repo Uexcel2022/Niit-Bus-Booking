@@ -99,16 +99,10 @@ public class BookingServiceImp implements BookingService {
         if(booking == null){
             throw new RuntimeException("Invalid ticket number");
         }
-        if(booking.getTicketStatus().equals("used")){
-            throw new RuntimeException("Ticket already used");
-        }
-
-        if(booking.getTicketStatus().equals("expired")){
-            throw new RuntimeException("Ticket already expired");
-        }
-
-        if(booking.getTicketStatus().equals("refund")){
-            throw new RuntimeException("You been refunded on this ticked");
+        switch (booking.getTicketStatus()) {
+            case "used" -> throw new RuntimeException("Ticket already used");
+            case "expired" -> throw new RuntimeException("Ticket already expired");
+            case "refund" -> throw new RuntimeException("You been refunded on this ticked");
         }
 
         Bus bus = busRepository.findByBusCode(checkinDto.getBusCode());
