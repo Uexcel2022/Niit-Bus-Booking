@@ -6,7 +6,7 @@ import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.entity.UserWallet;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
-import com.uexcel.busbooking.repository.SignupRepository;
+import com.uexcel.busbooking.repository.UserRepository;
 import com.uexcel.busbooking.repository.UserWalletRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +17,14 @@ import java.util.Optional;
 @Service
 public class SignupServiceImp implements SignupService {
 
-    private final   SignupRepository signupRepository;
+    private final UserRepository userRepository;
     private final NextOfKinRepository nextOfKinRepository;
     private final UserWalletRepository userWalletRepository;
 
-    public SignupServiceImp(SignupRepository signupRepository,
+    public SignupServiceImp(UserRepository userRepository,
                             NextOfKinRepository nextOfKinRepository,
                             UserWalletRepository userWalletRepository) {
-        this.signupRepository = signupRepository;
+        this.userRepository = userRepository;
         this.nextOfKinRepository = nextOfKinRepository;
         this.userWalletRepository = userWalletRepository;
     }
@@ -55,17 +55,17 @@ public class SignupServiceImp implements SignupService {
 
         userWalletRepository.save(userWallet);
         nextOfKinRepository.save(nextOfKin);
-       return signupRepository.save(user);
+       return userRepository.save(user);
     }
 
     @Override
     public User getUser(QueryUser queryUser) {
-        return signupRepository.findByEmail(queryUser.getEmail());
+        return userRepository.findByEmail(queryUser.getEmail());
     }
 
     @Override
     public User getUserById(Long id) {
-        Optional<User> signup = signupRepository.findById(id);
+        Optional<User> signup = userRepository.findById(id);
         if (signup.isPresent()) {
             return signup.get();
         }else  throw new NoSuchElementException("User not found");
@@ -73,7 +73,7 @@ public class SignupServiceImp implements SignupService {
 
     @Override
     public List<User> findAllUsers() {
-        return signupRepository.findAll();
+        return userRepository.findAll();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class SignupServiceImp implements SignupService {
 
     @Override
     public User updateUser(Long id, User updatedUser) {
-        Optional<User> signupOptional = signupRepository.findById(id);
+        Optional<User> signupOptional = userRepository.findById(id);
         if (signupOptional.isPresent()) {
             User oldUser = signupOptional.get();
             oldUser.setFirstName(updatedUser.getFirstName());
@@ -112,7 +112,7 @@ public class SignupServiceImp implements SignupService {
             oldUser.setEmail(updatedUser.getEmail());
             oldUser.setPassword(updatedUser.getPassword());
             oldUser.setPhoneNumber(updatedUser.getPhoneNumber());
-          return signupRepository.save(oldUser);
+          return userRepository.save(oldUser);
 
         } else throw new NoSuchElementException("Update failed");
     }
