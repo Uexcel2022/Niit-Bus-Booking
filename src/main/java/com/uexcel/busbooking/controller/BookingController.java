@@ -1,8 +1,9 @@
 package com.uexcel.busbooking.controller;
 
+import com.uexcel.busbooking.dto.CheckinDto;
 import com.uexcel.busbooking.dto.BookingInfoDto;
 import com.uexcel.busbooking.dto.BusRouteDto;
-import com.uexcel.busbooking.entity.Booking;
+import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.service.BookingService;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +26,10 @@ public class BookingController {
                                                @PathVariable("routeId") Long routeId){
         return ResponseEntity.ok().body(bookingService.processBooking(userId,routeId));
 
+    }
+
+    @PostMapping("/api/v1/checkin")
+    public ResponseEntity<ResponseDto> booking(@RequestBody CheckinDto checkinDto){
+        return  ResponseEntity.ok().body(bookingService.processCheckin(checkinDto));
     }
 }

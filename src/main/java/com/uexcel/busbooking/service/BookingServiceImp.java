@@ -2,14 +2,10 @@ package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.BookingInfoDto;
 import com.uexcel.busbooking.dto.BusRouteDto;
-import com.uexcel.busbooking.entity.Booking;
-import com.uexcel.busbooking.entity.Bus;
-import com.uexcel.busbooking.entity.Route;
-import com.uexcel.busbooking.entity.User;
-import com.uexcel.busbooking.repository.BookingRepository;
-import com.uexcel.busbooking.repository.BusRepository;
-import com.uexcel.busbooking.repository.RouteRepository;
-import com.uexcel.busbooking.repository.UserRepository;
+import com.uexcel.busbooking.dto.CheckinDto;
+import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.entity.*;
+import com.uexcel.busbooking.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,15 +16,18 @@ public class BookingServiceImp implements BookingService {
     private final RouteRepository routeRepository;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final CheckinRepository checkinRepository;
     public BookingServiceImp(BusRepository busRepository,
                              RouteRepository routeRepository,
                              BookingRepository bookingRepository,
-                             UserRepository userRepository
+                             UserRepository userRepository,
+                             CheckinRepository checkinRepository
                              ) {
         this.busRepository = busRepository;
         this.routeRepository = routeRepository;
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
+        this.checkinRepository = checkinRepository;
     }
     @Override
     public Bus addBus(BusRouteDto busRouteDto) {
@@ -48,13 +47,6 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public BookingInfoDto processBooking(Long userId, Long routeId) {
-        double price;
-        double walletBalance;
-        double newWalletBalance;
-        BookingInfoDto bookingInfoDto = new BookingInfoDto();
-        Booking booking = new Booking();
-        Optional<User> user = userRepository.findById(userId);
-        user.ifPresent(booking::setUser);
 
         Booking bk = bookingRepository.findByUserId(userId,routeId);
         if(bk != null){
@@ -62,6 +54,13 @@ public class BookingServiceImp implements BookingService {
             throw new RuntimeException("You have unused ticked on this route!!!"+" Ticked Number: "
                     +bk.getTicketNumber());
         }
+        double price;
+        double walletBalance;
+        double newWalletBalance;
+        BookingInfoDto bookingInfoDto = new BookingInfoDto();
+        Booking booking = new Booking();
+        Optional<User> user = userRepository.findById(userId);
+        user.ifPresent(booking::setUser);
 
         walletBalance = user.get().getUserWallet().getBalance();
 
@@ -90,5 +89,40 @@ public class BookingServiceImp implements BookingService {
         bookingInfoDto.setTickStatus(booking.getTicketStatus());
         return bookingInfoDto;
 
+    }
+
+    @Override
+    public ResponseDto processCheckin(CheckinDto checkinDto) {
+        Checkin checkin = new Checkin();
+        Booking booking = bookingRepository.findByTicketNumber(checkinDto.getTicketNumber());
+
+        if(booking == null){
+            throw new RuntimeException("Invalid ticket number");
+        }
+        if(booking.getTicketStatus().equals("used")){
+            throw new RuntimeException("Ticket already used");
+        }
+
+        if(booking.getTicketStatus().equals("expired")){
+            throw new RuntimeException("Ticket already expired");
+        }
+
+        Bus bus = busRepository.findByBusCode(checkinDto.getBusCode());
+
+        if(bus == null) {
+            throw new RuntimeException("Invalid bus code");
+        }
+
+        if(!bus.getRoute().getId().equals(booking.getRoute().getId())){
+            throw new RuntimeException("The ticket is not for this route");
+        }
+        checkin.setBus(bus);
+        booking.setTicketStatus("used");
+        checkin.setBooking(booking);
+        bookingRepository.save(booking);
+        checkinRepository.save(checkin);
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setResponse("Checkin successful");
+        return responseDto;
     }
 }

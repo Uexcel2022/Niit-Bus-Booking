@@ -8,7 +8,7 @@ import lombok.Data;
 public class Bus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long busId;
+    private Long id;
     @Column(nullable = false)
     private String busCode;
     @Column(nullable = false)

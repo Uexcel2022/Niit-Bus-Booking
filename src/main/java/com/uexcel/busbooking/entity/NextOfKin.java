@@ -3,14 +3,12 @@ package com.uexcel.busbooking.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
-
 @Entity
 @Data
 public class NextOfKin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long nextOfKinId;
+    private Long id;
     @Column(nullable = false)
     private String nFirstName;
     @Column(nullable = false)

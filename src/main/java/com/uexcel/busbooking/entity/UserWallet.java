@@ -13,7 +13,7 @@ import java.util.UUID;
 public class UserWallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long walletId;
+    private Long id;
     private String walletCode = UUID.randomUUID().toString();
     private double balance;
     private String status;

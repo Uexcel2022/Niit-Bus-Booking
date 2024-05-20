@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class Boarding {
+public class Checkin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardedId;
+    private Long id;
 
     @OneToOne(cascade = CascadeType.PERSIST,optional = false)
     private Booking booking;
@@ -19,5 +19,5 @@ public class Boarding {
     private Bus bus;
 
     @Column(nullable = false)
-    private LocalDate boardedDate;
+    private LocalDate checkinDate = LocalDate.now();
 }
