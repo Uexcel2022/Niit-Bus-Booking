@@ -17,17 +17,20 @@ public class BookingServiceImp implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final CheckinRepository checkinRepository;
+    private  final UserWalletRepository walletRepository;
     public BookingServiceImp(BusRepository busRepository,
                              RouteRepository routeRepository,
                              BookingRepository bookingRepository,
                              UserRepository userRepository,
-                             CheckinRepository checkinRepository
+                             CheckinRepository checkinRepository,
+                             UserWalletRepository walletRepository
                              ) {
         this.busRepository = busRepository;
         this.routeRepository = routeRepository;
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.checkinRepository = checkinRepository;
+        this.walletRepository = walletRepository;
     }
     @Override
     public Bus addBus(BusRouteDto busRouteDto) {
@@ -60,33 +63,41 @@ public class BookingServiceImp implements BookingService {
         BookingInfoDto bookingInfoDto = new BookingInfoDto();
         Booking booking = new Booking();
         Optional<User> user = userRepository.findById(userId);
-        user.ifPresent(booking::setUser);
+        User u;
+        if(user.isPresent()){
+            u = user.get();
+        } else throw new RuntimeException("User not found");
+        booking.setUser(u);
 
-        walletBalance = user.get().getUserWallet().getBalance();
-
+        UserWallet wallet = walletRepository.findByUserId(userId);
+        walletBalance = wallet.getBalance();
         Optional<Route> route = routeRepository.findById(routeId);
-        route.ifPresent(booking::setRoute);
+        Route r;
+        if(route.isPresent()){
+            r = route.get();
+        } else throw new RuntimeException("Route not found");
 
-        price = route.get().getPrice();
+        price = r.getPrice();
 
         if(walletBalance < price){
             throw new RuntimeException("Insufficient balance");
         }
 
         newWalletBalance = walletBalance - price;
-        user.get().getUserWallet().setBalance(newWalletBalance);
+        wallet.setBalance(newWalletBalance);
 
-        userRepository.save(user.get());
 
         booking.setTicketStatus("valid");
-        bookingRepository.save(booking);
-        bookingInfoDto.setFName(user.get().getFirstName());
-        bookingInfoDto.setLName(user.get().getLastName());
+
+        bookingInfoDto.setFName(u.getFirstName());
+        bookingInfoDto.setLName(u.getLastName());
         bookingInfoDto.setTickNumber(booking.getTicketNumber());
-        bookingInfoDto.setRouteName(route.get().getRouteName());
-        bookingInfoDto.setAmount(route.get().getPrice());
+        bookingInfoDto.setRouteName(r.getRouteName());
+        bookingInfoDto.setAmount(r.getPrice());
         bookingInfoDto.setBookingDate(booking.getBookingDate());
         bookingInfoDto.setTickStatus(booking.getTicketStatus());
+        walletRepository.save(wallet);
+        bookingRepository.save(booking);
         return bookingInfoDto;
 
     }

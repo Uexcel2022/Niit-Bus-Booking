@@ -6,6 +6,7 @@ import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.dto.WalletFundingDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
+import com.uexcel.busbooking.entity.UserWallet;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface SignupService {
     User updateUser(Long id, User user);
 
     ResponseDto processWalletFunding(WalletFundingDto walletFundingDto);
+
+//    ResponseDto deleteUser(Long userId);
+
+    UserWallet findUserWallet(Long userId);
 }

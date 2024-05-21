@@ -6,6 +6,7 @@ import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.dto.WalletFundingDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
+import com.uexcel.busbooking.entity.UserWallet;
 import com.uexcel.busbooking.service.SignupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,13 +45,13 @@ public class UserController {
         return ResponseEntity.ok().body(signupService.getNextOfKinById(id));
     }
 
-    @PostMapping("/api/v1/update_next_of_kin/{id}")
+    @PutMapping("/api/v1/update_next_of_kin/{id}")
     public ResponseEntity<NextOfKin> updateNextOfKinById(@PathVariable("id") Long id,
                                                                        @RequestBody NextOfKin nextOfKin){
         return ResponseEntity.ok().body(signupService.updateNextOfKin(id, nextOfKin));
     }
 
-    @PostMapping("/api/v1/update_user/{id}")
+    @PutMapping("/api/v1/update_user/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user){
         return ResponseEntity.ok().body(signupService.updateUser(id, user));
     }
@@ -59,6 +60,17 @@ public class UserController {
     public ResponseEntity<ResponseDto> fundWallet(@RequestBody WalletFundingDto walletFundingDto){
 
         return ResponseEntity.ok().body(signupService.processWalletFunding(walletFundingDto));
+    }
+
+//    @DeleteMapping("/api/v1/delete_user/{userId}")
+//    public ResponseEntity<ResponseDto> deleteUserById(@PathVariable Long userId){
+//        return ResponseEntity.ok().body(signupService.deleteUser(userId));
+//
+//    }
+    @GetMapping("/api/v1/user_wallet/{userId}")
+    public ResponseEntity<UserWallet> findWalletTransactionById(@PathVariable Long userId){
+       return ResponseEntity.ok().body(signupService.findUserWallet(userId));
+
     }
 
 }

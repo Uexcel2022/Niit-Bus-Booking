@@ -23,4 +23,7 @@ public class NextOfKin {
     private String state;
     @Column(nullable = false)
     private String nPhoneNumber;
+
+    @OneToOne(optional = false,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private User user;
 }

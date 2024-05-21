@@ -11,9 +11,13 @@ public class WalletTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String fullName;
+    @Column(nullable = false)
     private String transactionType;
     private String accountNumber;
     private String cCNumber;
+    @Column(nullable = false)
     private double amount;
     private LocalDate transactionDate = LocalDate.now();
 

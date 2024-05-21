@@ -43,6 +43,7 @@ public class SignupServiceImp implements SignupService {
 
         user.setFirstName(registrationData.getFirstName());
         user.setLastName(registrationData.getLastName());
+        user.setBirthDate(registrationData.getBirthDate());
         user.setEmail(registrationData.getEmail());
         user.setPassword(registrationData.getPassword());
         user.setPhoneNumber(registrationData.getPhoneNumber());
@@ -54,15 +55,18 @@ public class SignupServiceImp implements SignupService {
         nextOfKin.setStreet(registrationData.getStreet());
         nextOfKin.setState(registrationData.getState());
         nextOfKin.setNPhoneNumber(registrationData.getNPhoneNumber());
-        user.setNextOfKin(nextOfKin);
+//        user.setNextOfKin(nextOfKin);
 
         userWallet.setBalance(0.0);
         userWallet.setStatus("active");
-        user.setUserWallet(userWallet);
+//        user.setUserWallet(userWallet);
+        userRepository.save(user);
+        nextOfKin.setUser(user);
+        userWallet.setUser(user);
 
         userWalletRepository.save(userWallet);
         nextOfKinRepository.save(nextOfKin);
-       return userRepository.save(user);
+       return user;
     }
 
     @Override
@@ -135,6 +139,7 @@ public class SignupServiceImp implements SignupService {
             double balance = userWallet.getBalance();
             double newBalance = balance + walletFundingDto.getAmount();
             WalletTransaction walletTransaction = new WalletTransaction();
+            walletTransaction.setFullName(walletFundingDto.getFullName());
             walletTransaction.setTransactionType(walletFundingDto.getTransactionType());
             walletTransaction.setAccountNumber(walletFundingDto.getAccountNumber());
             walletTransaction.setCCNumber(walletFundingDto.getCCNumber());
@@ -147,5 +152,21 @@ public class SignupServiceImp implements SignupService {
             responseDto.setResponse("Transaction successful");
             return responseDto;
 
+    }
+
+//    @Override
+//    public ResponseDto deleteUser(Long userId) {
+//        Optional<User> user = userRepository.findById(userId);
+//        if (user.isPresent()) {
+//            userRepository.deleteById(userId);
+//            ResponseDto responseDto = new ResponseDto();
+//            responseDto.setResponse("User deleted successfully");
+//            return responseDto;
+//        } else throw new NoSuchElementException("User not found");
+//    }
+
+    @Override
+    public UserWallet findUserWallet(Long userId) {
+        return userWalletRepository.findByUserId(userId);
     }
 }

@@ -3,6 +3,8 @@ package com.uexcel.busbooking.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 public class User {
@@ -13,6 +15,8 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
+    @Column(nullable = false)
+    private LocalDate birthDate;
     @Column(unique=true, nullable = false)
     private String email;
     @Column(unique=true, nullable = false)
@@ -20,9 +24,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(optional = false,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private NextOfKin nextOfKin;
-
-    @OneToOne(optional = false,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private UserWallet userWallet;
+//    @OneToOne(mappedBy = "user")
+//    private NextOfKin nextOfKin;
+//
+//    @OneToOne(mappedBy = "user" )
+//    private UserWallet userWallet;
 }
