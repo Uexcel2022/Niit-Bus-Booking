@@ -45,6 +45,11 @@ public class UserController {
         return ResponseEntity.ok().body(signupService.getNextOfKinById(id));
     }
 
+    @GetMapping("/api/v1/next_of_kin_user_id/{userId}")
+    public ResponseEntity<NextOfKin> findNextOfKinByUserId(@PathVariable("userId") Long useId){
+        return ResponseEntity.ok().body(signupService.findNextOfKinByUsrId(useId));
+    }
+
     @PutMapping("/api/v1/update_next_of_kin/{id}")
     public ResponseEntity<NextOfKin> updateNextOfKinById(@PathVariable("id") Long id,
                                                                        @RequestBody NextOfKin nextOfKin){

@@ -169,4 +169,12 @@ public class SignupServiceImp implements SignupService {
     public UserWallet findUserWallet(Long userId) {
         return userWalletRepository.findByUserId(userId);
     }
+
+    @Override
+    public NextOfKin findNextOfKinByUsrId(Long userId) {
+        NextOfKin nextOfKin = nextOfKinRepository.findByUserId(userId);
+        if(nextOfKin != null) {
+            return nextOfKin;
+        } else throw new NoSuchElementException("next of kin not found");
+    }
 }

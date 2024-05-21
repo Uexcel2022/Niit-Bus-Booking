@@ -30,4 +30,6 @@ public interface SignupService {
 //    ResponseDto deleteUser(Long userId);
 
     UserWallet findUserWallet(Long userId);
+
+    NextOfKin findNextOfKinByUsrId(Long id);
 }
