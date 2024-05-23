@@ -7,4 +7,9 @@ public interface NextOfKinService {
     NextOfKinRepository getNextOfKinRepository();
 
     NextOfKin findNextOfKinByUsrId(Long id);
+
+    NextOfKin findByNextOfKinById(Long id);
+
+    NextOfKin updateNextOfKin(Long id, NextOfKin nextOfKin);
+
 }

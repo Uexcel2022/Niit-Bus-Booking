@@ -19,10 +19,10 @@ public class Booking {
     @Column(nullable = false)
     private String ticketStatus;
 
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER,optional = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER,optional = false)
     private Route route;
 
 }

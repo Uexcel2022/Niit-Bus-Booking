@@ -18,7 +18,7 @@ public class SignupController {
 
     @PostMapping("/api/v1/signup")
     public ResponseEntity<ResponseDto> signup(@RequestBody RegistrationData registrationData) {
-        return  ResponseEntity.ok().body(signupService.processSignup(registrationData));
+        return  ResponseEntity.status(201).body(signupService.processSignup(registrationData));
     }
 
 }

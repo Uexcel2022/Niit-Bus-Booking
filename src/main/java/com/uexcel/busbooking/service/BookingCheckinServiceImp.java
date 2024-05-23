@@ -1,7 +1,6 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.BookingInfoDto;
-import com.uexcel.busbooking.dto.BusRouteDto;
 import com.uexcel.busbooking.dto.CheckinDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.*;
@@ -11,42 +10,23 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class BookingServiceImp implements BookingService {
-    private final BusRepository busRepository;
-    private final RouteRepository routeRepository;
+public class BookingCheckinServiceImp implements BookingCheckinService {
+    private final BusRouteService busRouteService;;
     private final BookingRepository bookingRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final CheckinRepository checkinRepository;
-    private  final UserWalletRepository walletRepository;
-    public BookingServiceImp(BusRepository busRepository,
-                             RouteRepository routeRepository,
-                             BookingRepository bookingRepository,
-                             UserRepository userRepository,
-                             CheckinRepository checkinRepository,
-                             UserWalletRepository walletRepository
-                             ) {
-        this.busRepository = busRepository;
-        this.routeRepository = routeRepository;
+    private  final UserWalletService userWalletService;
+    public BookingCheckinServiceImp(BusRouteService busRouteService,
+                                    BookingRepository bookingRepository, UserService userService,
+                                    CheckinRepository checkinRepository, UserWalletService userWalletService
+    ) {
+        this.busRouteService = busRouteService;
         this.bookingRepository = bookingRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.checkinRepository = checkinRepository;
-        this.walletRepository = walletRepository;
+        this.userWalletService = userWalletService;
     }
-    @Override
-    public Bus addBus(BusRouteDto busRouteDto) {
-        Bus bus = new Bus();
-        Route route = new Route();
-        bus.setBusCode(busRouteDto.getBusCode());
-        bus.setBrand(busRouteDto.getBrand());
-        bus.setModel(busRouteDto.getModel());
-        bus.setBusCapacity(busRouteDto.getBusCapacity());
-        bus.setServiceStartDate(busRouteDto.getServiceStartDate());
-        route.setRouteName(busRouteDto.getRouteName());
-        route.setPrice(busRouteDto.getPrice());
-        bus.setRoute(route);
-        routeRepository.save(route);
-        return busRepository.save(bus);
-    }
+
 
     @Override
     public BookingInfoDto processBooking(Long userId, Long routeId) {
@@ -62,16 +42,17 @@ public class BookingServiceImp implements BookingService {
         double newWalletBalance;
         BookingInfoDto bookingInfoDto = new BookingInfoDto();
         Booking booking = new Booking();
-        Optional<User> user = userRepository.findById(userId);
+        Optional<User> user = userService.getUserRepository().findById(userId);
         User u;
         if(user.isPresent()){
             u = user.get();
         } else throw new RuntimeException("User not found");
-        booking.setUser(u);
 
-        UserWallet wallet = walletRepository.findUserWalletByUserId(userId);
+        UserWallet wallet = userWalletService.getUserWalletRepository()
+                .findUserWalletByUserId(userId);
         walletBalance = wallet.getBalance();
-        Optional<Route> route = routeRepository.findById(routeId);
+        Optional<Route> route = busRouteService.getRouteRepository().findById(routeId);
+
         Route r;
         if(route.isPresent()){
             r = route.get();
@@ -85,6 +66,8 @@ public class BookingServiceImp implements BookingService {
 
         newWalletBalance = walletBalance - price;
         wallet.setBalance(newWalletBalance);
+        booking.setRoute(r);
+        booking.setUser(u);
 
 
         booking.setTicketStatus("valid");
@@ -96,8 +79,8 @@ public class BookingServiceImp implements BookingService {
         bookingInfoDto.setAmount(r.getPrice());
         bookingInfoDto.setBookingDate(booking.getBookingDate());
         bookingInfoDto.setTickStatus(booking.getTicketStatus());
-        walletRepository.save(wallet);
         bookingRepository.save(booking);
+        userWalletService.getUserWalletRepository().save(wallet);
         return bookingInfoDto;
 
     }
@@ -116,7 +99,7 @@ public class BookingServiceImp implements BookingService {
             case "refund" -> throw new RuntimeException("You been refunded on this ticked");
         }
 
-        Bus bus = busRepository.findByBusCode(checkinDto.getBusCode());
+        Bus bus = busRouteService.getBusRepository().findByBusCode(checkinDto.getBusCode());
 
         if(bus == null) {
             throw new RuntimeException("Invalid bus code");

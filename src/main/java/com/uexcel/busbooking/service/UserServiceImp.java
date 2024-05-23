@@ -1,7 +1,6 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.UseEmailPasswordDto;
-import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,10 @@ import java.util.Optional;
 public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
-    private final NextOfKinService nextOfKinService;
 
     public UserServiceImp(UserRepository userRepository,
                           NextOfKinService nextOfKinService) {
         this.userRepository = userRepository;
-        this.nextOfKinService = nextOfKinService;
 
     }
 
@@ -29,12 +26,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User getUserByEmail(UseEmailPasswordDto useEmailPasswordDto) {
+    public User findByUserByEmail(UseEmailPasswordDto useEmailPasswordDto) {
         return userRepository.findByEmail(useEmailPasswordDto.getEmail());
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User findByUserById(Long id) {
         Optional<User> signup = userRepository.findById(id);
         if (signup.isPresent()) {
             return signup.get();
@@ -44,32 +41,6 @@ public class UserServiceImp implements UserService {
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
-    }
-
-    @Override
-    public NextOfKin getNextOfKinById(Long id) {
-        Optional<NextOfKin> nextOfKin = nextOfKinService.getNextOfKinRepository().findById(id);
-        if (nextOfKin.isPresent()) {
-            return nextOfKin.get();
-        }else  throw new NoSuchElementException("next of kin not found");
-    }
-
-    @Override
-    public NextOfKin updateNextOfKin(Long id, NextOfKin updatedNextOfKin) {
-
-        Optional<NextOfKin> nextOfKinOptional = nextOfKinService.getNextOfKinRepository().findById(id);
-        if (nextOfKinOptional.isPresent()) {
-            NextOfKin oldNextOfKin = nextOfKinOptional.get();
-            oldNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
-            oldNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
-            oldNextOfKin.setAddress(updatedNextOfKin.getAddress());
-            oldNextOfKin.setLga(updatedNextOfKin.getLga());
-            oldNextOfKin.setStreet(updatedNextOfKin.getStreet());
-            oldNextOfKin.setState(updatedNextOfKin.getState());
-            oldNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
-            nextOfKinService.getNextOfKinRepository().save(oldNextOfKin);
-            return oldNextOfKin;
-        } else throw new NoSuchElementException("Update failed");
     }
 
     @Override
