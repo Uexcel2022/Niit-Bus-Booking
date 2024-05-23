@@ -1,41 +1,33 @@
 package com.uexcel.busbooking.service;
 
-import com.uexcel.busbooking.dto.QueryUser;
 import com.uexcel.busbooking.dto.RegistrationData;
 import com.uexcel.busbooking.dto.ResponseDto;
-import com.uexcel.busbooking.dto.WalletFundingDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.entity.UserWallet;
-import com.uexcel.busbooking.entity.WalletTransaction;
-import com.uexcel.busbooking.repository.NextOfKinRepository;
-import com.uexcel.busbooking.repository.UserRepository;
-import com.uexcel.busbooking.repository.UserWalletRepository;
-import com.uexcel.busbooking.repository.WallTransactionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 @Service
-public class SignupServiceImp implements SignupService {
+public class SignupServiceImp implements SignupService{
+    private final UserService userService;
+    private final UserWalletService userWalletService;
+    private final NextOfKinService nextOfKinService;
+      public SignupServiceImp(UserService userService,
+                              UserWalletService userWalletService,
+              NextOfKinService nextOfKinService){
+          this.userService = userService;
+          this.userWalletService = userWalletService;
+          this.nextOfKinService = nextOfKinService;
+      }
 
-    private final UserRepository userRepository;
-    private final NextOfKinRepository nextOfKinRepository;
-    private final UserWalletRepository userWalletRepository;
-    private final WallTransactionRepository wallTransactionRepository;
+    public ResponseDto processSignup(RegistrationData registrationData) {
 
-    public SignupServiceImp(UserRepository userRepository,
-                            NextOfKinRepository nextOfKinRepository,
-                            UserWalletRepository userWalletRepository,
-                            WallTransactionRepository wallTransactionRepository) {
-        this.userRepository = userRepository;
-        this.nextOfKinRepository = nextOfKinRepository;
-        this.userWalletRepository = userWalletRepository;
-        this.wallTransactionRepository = wallTransactionRepository;
-    }
-    public User processSignup(RegistrationData registrationData) {
+          User isExist = userService.getUserRepository()
+                  .findByEmailOrPhoneNumber(registrationData.getEmail(),registrationData.getPhoneNumber());
+          if(isExist != null){
+              throw new RuntimeException("User already exists. Use another email or phone number to register.");
+          }
+
 
         User user = new User();
         NextOfKin nextOfKin = new NextOfKin();
@@ -55,126 +47,18 @@ public class SignupServiceImp implements SignupService {
         nextOfKin.setStreet(registrationData.getStreet());
         nextOfKin.setState(registrationData.getState());
         nextOfKin.setNPhoneNumber(registrationData.getNPhoneNumber());
-//        user.setNextOfKin(nextOfKin);
 
         userWallet.setBalance(0.0);
         userWallet.setStatus("active");
-//        user.setUserWallet(userWallet);
-        userRepository.save(user);
+
+        userService.getUserRepository().save(user);
         nextOfKin.setUser(user);
         userWallet.setUser(user);
-
-        userWalletRepository.save(userWallet);
-        nextOfKinRepository.save(nextOfKin);
-       return user;
+        userWalletService.getUserWalletRepository().save(userWallet);
+        nextOfKinService.getNextOfKinRepository().save(nextOfKin);
+        ResponseDto responseDto = new ResponseDto();
+         responseDto.setResponse("You have successfully registered!");
+        return responseDto;
     }
 
-    @Override
-    public User getUser(QueryUser queryUser) {
-        return userRepository.findByEmail(queryUser.getEmail());
-    }
-
-    @Override
-    public User getUserById(Long id) {
-        Optional<User> signup = userRepository.findById(id);
-        if (signup.isPresent()) {
-            return signup.get();
-        }else  throw new NoSuchElementException("User not found");
-    }
-
-    @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public NextOfKin getNextOfKinById(Long id) {
-        Optional<NextOfKin> nextOfKin = nextOfKinRepository.findById(id);
-        if (nextOfKin.isPresent()) {
-            return nextOfKin.get();
-        }else  throw new NoSuchElementException("next of kin not found");
-    }
-
-    @Override
-    public NextOfKin updateNextOfKin(Long id, NextOfKin updatedNextOfKin) {
-
-        Optional<NextOfKin> nextOfKinOptional = nextOfKinRepository.findById(id);
-        if (nextOfKinOptional.isPresent()) {
-            NextOfKin oldNextOfKin = nextOfKinOptional.get();
-            oldNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
-            oldNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
-            oldNextOfKin.setAddress(updatedNextOfKin.getAddress());
-            oldNextOfKin.setLga(updatedNextOfKin.getLga());
-            oldNextOfKin.setStreet(updatedNextOfKin.getStreet());
-            oldNextOfKin.setState(updatedNextOfKin.getState());
-            oldNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
-            nextOfKinRepository.save(oldNextOfKin);
-            return oldNextOfKin;
-        } else throw new NoSuchElementException("Update failed");
-    }
-
-    @Override
-    public User updateUser(Long id, User updatedUser) {
-        Optional<User> signupOptional = userRepository.findById(id);
-        if (signupOptional.isPresent()) {
-            User oldUser = signupOptional.get();
-            oldUser.setFirstName(updatedUser.getFirstName());
-            oldUser.setLastName(updatedUser.getLastName());
-            oldUser.setEmail(updatedUser.getEmail());
-            oldUser.setPassword(updatedUser.getPassword());
-            oldUser.setPhoneNumber(updatedUser.getPhoneNumber());
-          return userRepository.save(oldUser);
-
-        } else throw new NoSuchElementException("Update failed");
-    }
-
-    @Override
-    public ResponseDto processWalletFunding(WalletFundingDto walletFundingDto) {
-
-        UserWallet userWallet = userWalletRepository.findByWalletCode(walletFundingDto.getWalletCode());
-
-        if (userWallet == null) {
-            throw new NoSuchElementException("Invalid wallet code");
-        }
-            double balance = userWallet.getBalance();
-            double newBalance = balance + walletFundingDto.getAmount();
-            WalletTransaction walletTransaction = new WalletTransaction();
-            walletTransaction.setFullName(walletFundingDto.getFullName());
-            walletTransaction.setTransactionType(walletFundingDto.getTransactionType());
-            walletTransaction.setAccountNumber(walletFundingDto.getAccountNumber());
-            walletTransaction.setCCNumber(walletFundingDto.getCCNumber());
-            walletTransaction.setAmount(walletFundingDto.getAmount());
-            userWallet.setBalance(newBalance);
-            walletTransaction.setWallet(userWallet);
-            userWalletRepository.save(userWallet);
-            wallTransactionRepository.save(walletTransaction);
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.setResponse("Transaction successful");
-            return responseDto;
-
-    }
-
-//    @Override
-//    public ResponseDto deleteUser(Long userId) {
-//        Optional<User> user = userRepository.findById(userId);
-//        if (user.isPresent()) {
-//            userRepository.deleteById(userId);
-//            ResponseDto responseDto = new ResponseDto();
-//            responseDto.setResponse("User deleted successfully");
-//            return responseDto;
-//        } else throw new NoSuchElementException("User not found");
-//    }
-
-    @Override
-    public UserWallet findUserWallet(Long userId) {
-        return userWalletRepository.findByUserId(userId);
-    }
-
-    @Override
-    public NextOfKin findNextOfKinByUsrId(Long userId) {
-        NextOfKin nextOfKin = nextOfKinRepository.findByUserId(userId);
-        if(nextOfKin != null) {
-            return nextOfKin;
-        } else throw new NoSuchElementException("next of kin not found");
-    }
 }

@@ -69,7 +69,7 @@ public class BookingServiceImp implements BookingService {
         } else throw new RuntimeException("User not found");
         booking.setUser(u);
 
-        UserWallet wallet = walletRepository.findByUserId(userId);
+        UserWallet wallet = walletRepository.findUserWalletByUserId(userId);
         walletBalance = wallet.getBalance();
         Optional<Route> route = routeRepository.findById(routeId);
         Route r;

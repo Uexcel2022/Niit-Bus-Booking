@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface UserWalletRepository extends JpaRepository<UserWallet,Long> {
     @Query(value = "SELECT p FROM UserWallet p WHERE p.walletCode=:walletCode")
     UserWallet findByWalletCode(String walletCode);
+
     @Query(nativeQuery = true,value = "SELECT * FROM user_wallet WHERE user_id=:userId")
-    UserWallet findByUserId(Long userId);
+    UserWallet findUserWalletByUserId(Long userId);
 }

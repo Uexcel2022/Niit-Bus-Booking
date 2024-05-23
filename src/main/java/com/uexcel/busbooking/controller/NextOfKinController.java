@@ -1,0 +1,22 @@
+package com.uexcel.busbooking.controller;
+
+import com.uexcel.busbooking.entity.NextOfKin;
+import com.uexcel.busbooking.service.NextOfKinService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class NextOfKinController {
+    private final NextOfKinService nextOfKinService;
+
+    public NextOfKinController(NextOfKinService nextOfKinService) {
+        this.nextOfKinService = nextOfKinService;
+    }
+
+    @GetMapping("/api/v1/next_of_kin_user_id/{userId}")
+    public ResponseEntity<NextOfKin> findNextOfKinByUserId(@PathVariable("userId") Long useId){
+        return ResponseEntity.ok().body(nextOfKinService.findNextOfKinByUsrId(useId));
+    }
+}
