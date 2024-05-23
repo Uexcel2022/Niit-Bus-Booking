@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class BookingCheckinServiceImp implements BookingCheckinService {
-    private final BusRouteService busRouteService;;
+    private final BusRouteService busRouteService;
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final CheckinRepository checkinRepository;
