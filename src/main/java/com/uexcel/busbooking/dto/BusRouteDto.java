@@ -10,7 +10,7 @@ public class BusRouteDto {
     private String busCode;
     private int busCapacity;
     private LocalDate serviceStartDate = LocalDate.now();
-    private String serviceEndDate;
+    private LocalDate serviceEndDate;
     private String brand;
     private String model;
     private String routeName;

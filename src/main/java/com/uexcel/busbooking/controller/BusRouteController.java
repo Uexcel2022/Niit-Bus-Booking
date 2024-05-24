@@ -3,6 +3,7 @@ package com.uexcel.busbooking.controller;
 import com.uexcel.busbooking.dto.BusRouteDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
+import com.uexcel.busbooking.entity.Route;
 import com.uexcel.busbooking.service.BusRouteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,45 +24,51 @@ public class BusRouteController {
     }
 
 
-    @PutMapping("/apa/v1/find_bus/{busCode}")
-    public ResponseEntity<Bus> findRoutByCode(@PathVariable("busCode") String busCode) {
-        return null;
+    @GetMapping("/api/v1/find_bus_by_code/{busCode}")
+    public ResponseEntity<Bus> findBusByCode(@PathVariable("busCode") String busCode) {
+        return ResponseEntity.ok().body(busRouteService.findBusByCode(busCode));
     }
 
-    @PutMapping("/apa/v1/find_all_bus")
+    @GetMapping("/api/v1/find_all_bus")
     public ResponseEntity<List<Bus>> findALLBus() {
-        return null;
+        return ResponseEntity.ok().body(busRouteService.findAllBus());
     }
 
-    @PutMapping("/apa/v1/find_bus/{routeName}")
-    public ResponseEntity<Bus> findRoutByName(@PathVariable("routeName") String routeName) {
-        return null;
+    @GetMapping("/api/v1/find_route_name/{routeName}")
+    public ResponseEntity<Route> findRoutByName(@PathVariable("routeName") String routeName) {
+        return ResponseEntity.ok().body(busRouteService.findRoutByName(routeName));
     }
 
-    @PutMapping("/apa/v1/find_all_bus")
-    public ResponseEntity<List<Bus>> findALLRoute() {
-        return null;
+    @GetMapping("/api/v1/find_all_route")
+    public ResponseEntity<List<Route>> findALLRoute() {
+        return ResponseEntity.ok().body(busRouteService.findAllRoute());
     }
 
 
-    @PutMapping("/apa/v1/update_bus/{id}")
+    @PutMapping("/api/v1/update_bus/{id}")
     public ResponseEntity<ResponseDto> updateBus(@PathVariable("id") Long busId,
                                                  @RequestBody BusRouteDto busRouteDto) {
-        return null;
+        return ResponseEntity.ok().body(busRouteService.updateBus(busId,busRouteDto));
     }
 
-    @PutMapping("/apa/v1/bus/{id}")
+    @PutMapping("/api/v1/update_bus_route/{busCode}/{routeName}")
+    public ResponseEntity<ResponseDto> updateBusRoute(@PathVariable("busCode") String busCode,
+                                                 @PathVariable("routeName") String routeName) {
+        return ResponseEntity.status(200).body(busRouteService.updateBusRoute(busCode,routeName));
+    }
+
+    @DeleteMapping("/api/v1/bus/{id}")
     public ResponseEntity<ResponseDto> deleteBus(@PathVariable("id") Long busId) {
         return ResponseEntity.status(204).body(null);
     }
 
-    @PutMapping("/apa/v1/update_route/{id}")
+    @PutMapping("/api/v1/update_route/{id}")
     public ResponseEntity<ResponseDto> updateRoute(@PathVariable("id") Long routeId,
                                                  @RequestBody BusRouteDto busRouteDto) {
-        return null;
+        return ResponseEntity.ok().body(busRouteService.updateRoute(routeId,busRouteDto));
     }
 
-    @PutMapping("/apa/v1/delete_route/{id}")
+    @DeleteMapping("/api/v1/delete_route/{id}")
     public ResponseEntity<ResponseDto> deleteRout(@PathVariable("id") Long routeId) {
         return ResponseEntity.status(204).body(null);
     }
