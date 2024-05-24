@@ -1,5 +1,7 @@
 package com.uexcel.busbooking.service;
 
+import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.validation.Validation;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import org.springframework.stereotype.Service;
@@ -35,21 +37,41 @@ public class NextOfKinServiceImp implements NextOfKinService {
     }
 
     @Override
-    public NextOfKin updateNextOfKin(Long id, NextOfKin updatedNextOfKin) {
+    public ResponseDto updateNextOfKin(Long id, NextOfKin updatedNextOfKin) {
 
         Optional<NextOfKin> nextOfKinOptional = nextOfKinRepository.findById(id);
         if (nextOfKinOptional.isPresent()) {
-            NextOfKin oldNextOfKin = nextOfKinOptional.get();
-            oldNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
-            oldNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
-            oldNextOfKin.setAddress(updatedNextOfKin.getAddress());
-            oldNextOfKin.setLga(updatedNextOfKin.getLga());
-            oldNextOfKin.setStreet(updatedNextOfKin.getStreet());
-            oldNextOfKin.setState(updatedNextOfKin.getState());
-            oldNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
-            nextOfKinRepository.save(oldNextOfKin);
-            return oldNextOfKin;
+            NextOfKin toUpdateNextOfKin = nextOfKinOptional.get();
+
+            if(Validation.checkName(updatedNextOfKin.getNFirstName())) {
+                toUpdateNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
+            }
+
+            if(Validation.checkName(updatedNextOfKin.getNLastName())) {
+                toUpdateNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
+            }
+
+            if(Validation.checkNullBlank(updatedNextOfKin.getAddress())) {
+                toUpdateNextOfKin.setAddress(updatedNextOfKin.getAddress());
+            }
+            if(Validation.checkNullBlank(updatedNextOfKin.getLga())) {
+                toUpdateNextOfKin.setLga(updatedNextOfKin.getLga());
+            }
+
+            if(Validation.checkNullBlank(updatedNextOfKin.getState())) {
+                toUpdateNextOfKin.setState(updatedNextOfKin.getState());
+            }
+            if(!Validation.checkPhone(updatedNextOfKin.getNPhoneNumber())) {
+                toUpdateNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
+            }
+            nextOfKinRepository.save(toUpdateNextOfKin);
+            ResponseDto responseDto = new ResponseDto();
+            responseDto.setResponse("Updated may be successful if the information entered is valid." +
+                    "Please cross check; otherwise try again");
+            return responseDto;
         } else throw new NoSuchElementException("Update failed");
     }
+
+
 
 }

@@ -18,8 +18,6 @@ public class NextOfKin {
     @Column(nullable = false)
     private String lga;
     @Column(nullable = false)
-    private String street;
-    @Column(nullable = false)
     private String state;
     @Column(nullable = false)
     private String nPhoneNumber;

@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.service;
 
+import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 
@@ -10,6 +11,6 @@ public interface NextOfKinService {
 
     NextOfKin findByNextOfKinById(Long id);
 
-    NextOfKin updateNextOfKin(Long id, NextOfKin nextOfKin);
+    ResponseDto updateNextOfKin(Long id, NextOfKin nextOfKin);
 
 }

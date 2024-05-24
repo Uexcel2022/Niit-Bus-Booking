@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class RegistrationData {
     private String firstName;
     private String lastName;
-    private LocalDate birthDate;
+    private String birthDate;
     private String email;
     private String phoneNumber;
     private String password;
@@ -16,7 +16,6 @@ public class RegistrationData {
     private String nLastName;
     private String address;
     private String lga;
-    private String street;
     private String state;
     private String nPhoneNumber;
 

@@ -1,6 +1,7 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.BusRouteDto;
+import com.uexcel.busbooking.validation.Validation;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.entity.Route;
@@ -92,13 +93,13 @@ public class BusRouteServiceImp implements BusRouteService{
         if(bus.isPresent()) {
             Bus busToUpdate = bus.get();
 
-            if(busRouteDto.getBusCode() != null) {
+            if(Validation.checkNullBlank(busRouteDto.getBusCode())) {
                 busToUpdate.setBusCode(busRouteDto.getBusCode());
             }
             if(busRouteDto.getBusCapacity() != 0) {
                 busToUpdate.setBusCapacity(busRouteDto.getBusCapacity());
             }
-            if(busRouteDto.getBrand() != null) {
+            if(Validation.checkNullBlank(busRouteDto.getBrand())) {
                 busToUpdate.setBrand(busRouteDto.getBrand());
             }
             if(busRouteDto.getServiceStartDate()!= null) {
