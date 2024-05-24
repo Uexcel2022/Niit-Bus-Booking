@@ -108,7 +108,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         if(!bus.getRoute().getId().equals(booking.getRoute().getId())){
             throw new RuntimeException("The ticket is not for this route");
         }
-        checkin.setBus(bus);
+//        checkin.setBus(bus);
         booking.setTicketStatus("used");
         checkin.setBooking(booking);
         bookingRepository.save(booking);

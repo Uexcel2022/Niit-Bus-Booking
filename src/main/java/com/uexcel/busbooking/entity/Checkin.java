@@ -11,12 +11,13 @@ public class Checkin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false,updatable = false)
+    private String busCode;
+    @Column(nullable = false,updatable = false)
+    private String currentBusRouteId;
 
     @OneToOne(cascade = CascadeType.PERSIST,optional = false)
     private Booking booking;
-
-    @ManyToOne(cascade = CascadeType.PERSIST,optional = false)
-    private Bus bus;
 
     @Column(nullable = false)
     private LocalDate checkinDate = LocalDate.now();
