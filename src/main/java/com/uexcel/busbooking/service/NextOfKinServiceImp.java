@@ -1,7 +1,7 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.ResponseDto;
-import com.uexcel.busbooking.validation.Validation;
+import com.uexcel.busbooking.utils.Validation;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,10 @@ import java.util.Optional;
 @Service
 public class NextOfKinServiceImp implements NextOfKinService {
     private final NextOfKinRepository nextOfKinRepository;
-    public NextOfKinServiceImp(NextOfKinRepository nextOfKinRepository) {
+    private  final Validation validation;
+    public NextOfKinServiceImp(NextOfKinRepository nextOfKinRepository, Validation validation) {
         this.nextOfKinRepository = nextOfKinRepository;
+        this.validation = validation;
     }
     @Override
     public NextOfKinRepository getNextOfKinRepository() {
@@ -21,7 +23,7 @@ public class NextOfKinServiceImp implements NextOfKinService {
     }
 
     @Override
-    public NextOfKin findNextOfKinByUsrId(Long userId) {
+    public NextOfKin findNextOfKinByUsrId(String userId) {
         NextOfKin nextOfKin = nextOfKinRepository.findByUserId(userId);
         if(nextOfKin != null) {
             return nextOfKin;
@@ -29,7 +31,7 @@ public class NextOfKinServiceImp implements NextOfKinService {
     }
 
     @Override
-    public NextOfKin findByNextOfKinById(Long id) {
+    public NextOfKin findByNextOfKinById(String id) {
         Optional<NextOfKin> nextOfKin = nextOfKinRepository.findById(id);
         if (nextOfKin.isPresent()) {
             return nextOfKin.get();
@@ -37,31 +39,31 @@ public class NextOfKinServiceImp implements NextOfKinService {
     }
 
     @Override
-    public ResponseDto updateNextOfKin(Long id, NextOfKin updatedNextOfKin) {
+    public ResponseDto updateNextOfKin(String id, NextOfKin updatedNextOfKin) {
 
         Optional<NextOfKin> nextOfKinOptional = nextOfKinRepository.findById(id);
         if (nextOfKinOptional.isPresent()) {
             NextOfKin toUpdateNextOfKin = nextOfKinOptional.get();
 
-            if(Validation.checkName(updatedNextOfKin.getNFirstName())) {
+            if(validation.checkName(updatedNextOfKin.getNFirstName())) {
                 toUpdateNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
             }
 
-            if(Validation.checkName(updatedNextOfKin.getNLastName())) {
+            if(validation.checkName(updatedNextOfKin.getNLastName())) {
                 toUpdateNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
             }
 
-            if(Validation.checkNullBlank(updatedNextOfKin.getAddress())) {
+            if(validation.checkNullBlank(updatedNextOfKin.getAddress())) {
                 toUpdateNextOfKin.setAddress(updatedNextOfKin.getAddress());
             }
-            if(Validation.checkNullBlank(updatedNextOfKin.getLga())) {
+            if(validation.checkNullBlank(updatedNextOfKin.getLga())) {
                 toUpdateNextOfKin.setLga(updatedNextOfKin.getLga());
             }
 
-            if(Validation.checkNullBlank(updatedNextOfKin.getState())) {
+            if(validation.checkNullBlank(updatedNextOfKin.getState())) {
                 toUpdateNextOfKin.setState(updatedNextOfKin.getState());
             }
-            if(!Validation.checkPhone(updatedNextOfKin.getNPhoneNumber())) {
+            if(!validation.checkPhone(updatedNextOfKin.getNPhoneNumber())) {
                 toUpdateNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
             }
             nextOfKinRepository.save(toUpdateNextOfKin);

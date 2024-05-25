@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
+    public ResponseEntity<User> getUserById(@PathVariable("id") String id){
         return ResponseEntity.ok(userService.findByUserById(id));
     }
 
@@ -32,7 +32,7 @@ public class UserController {
 
 
     @PutMapping("/api/v1/update_user/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user){
+    public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody User user){
         return ResponseEntity.ok().body(userService.updateUser(id, user));
     }
 

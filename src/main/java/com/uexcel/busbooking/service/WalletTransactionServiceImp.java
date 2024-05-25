@@ -20,7 +20,7 @@ public class WalletTransactionServiceImp implements WalletTransactionService {
     }
 
     @Override
-    public List<WalletTransaction> findWalletTransByWalletId(Long walletId) {
+    public List<WalletTransaction> findWalletTransByWalletId(String walletId) {
         return wallTransactionRepository.findByWalletId(walletId);
     }
 

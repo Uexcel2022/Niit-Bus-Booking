@@ -4,6 +4,7 @@ import com.uexcel.busbooking.dto.BookingInfoDto;
 import com.uexcel.busbooking.dto.CheckinDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.*;
+import com.uexcel.busbooking.exception.BadRequestException;
 import com.uexcel.busbooking.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
 
 
     @Override
-    public BookingInfoDto processBooking(Long userId, Long routeId) {
+    public BookingInfoDto processBooking(String userId, String routeId) {
 
         Booking bk = bookingRepository.findByUserId(userId,routeId);
         if(bk != null){
@@ -91,12 +92,12 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         Booking booking = bookingRepository.findByTicketNumber(checkinDto.getTicketNumber());
 
         if(booking == null){
-            throw new RuntimeException("Invalid ticket number");
+            throw new BadRequestException("Invalid ticket number");
         }
         switch (booking.getTicketStatus()) {
-            case "used" -> throw new RuntimeException("Ticket already used");
-            case "expired" -> throw new RuntimeException("Ticket already expired");
-            case "refund" -> throw new RuntimeException("You been refunded on this ticked");
+            case "used" -> throw new BadRequestException("Ticket already used");
+            case "expired" -> throw new BadRequestException("Ticket already expired");
+            case "refund" -> throw new BadRequestException("You been refunded on this ticked");
         }
 
         Bus bus = busRouteService.getBusRepository().findByBusCode(checkinDto.getBusCode());
@@ -106,9 +107,11 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         }
 
         if(!bus.getRoute().getId().equals(booking.getRoute().getId())){
-            throw new RuntimeException("The ticket is not for this route");
+            throw new BadRequestException("The ticket is not for this route");
         }
-//        checkin.setBus(bus);
+
+        checkin.setBusCode(bus.getBusCode());
+        checkin.setCurrentBusRouteId(bus.getRoute().getId());
         booking.setTicketStatus("used");
         checkin.setBooking(booking);
         bookingRepository.save(booking);
@@ -118,3 +121,38 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         return responseDto;
     }
 }
+
+//OLD CODE
+//    @Override
+//    public ResponseDto processCheckin(CheckinDto checkinDto) {
+//        Checkin checkin = new Checkin();
+//        Booking booking = bookingRepository.findByTicketNumber(checkinDto.getTicketNumber());
+//
+//        if(booking == null){
+//            throw new RuntimeException("Invalid ticket number");
+//        }
+//        switch (booking.getTicketStatus()) {
+//            case "used" -> throw new RuntimeException("Ticket already used");
+//            case "expired" -> throw new RuntimeException("Ticket already expired");
+//            case "refund" -> throw new RuntimeException("You been refunded on this ticked");
+//        }
+//
+//        Bus bus = busRouteService.getBusRepository().findByBusCode(checkinDto.getBusCode());
+//
+//        if(bus == null) {
+//            throw new RuntimeException("Invalid bus code");
+//        }
+//
+//        if(!bus.getRoute().getId().equals(booking.getRoute().getId())){
+//            throw new RuntimeException("The ticket is not for this route");
+//        }
+////        checkin.setBus(bus);
+//        booking.setTicketStatus("used");
+//        checkin.setBooking(booking);
+//        bookingRepository.save(booking);
+//        checkinRepository.save(checkin);
+//        ResponseDto responseDto = new ResponseDto();
+//        responseDto.setResponse("Checkin successful");
+//        return responseDto;
+//    }
+//}

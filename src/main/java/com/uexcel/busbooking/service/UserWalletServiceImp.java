@@ -8,6 +8,7 @@ import com.uexcel.busbooking.repository.UserWalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class UserWalletServiceImp implements UserWalletService {
@@ -26,13 +27,15 @@ public class UserWalletServiceImp implements UserWalletService {
     @Override
     public ResponseDto processWalletFunding(WalletFundingDto walletFundingDto) {
 
-        UserWallet userWallet = userWalletRepository
-                .findByWalletCode(walletFundingDto.getWalletCode());
+        Optional<UserWallet> userWallet = userWalletRepository
+                .findById(walletFundingDto.getId());
 
-        if (userWallet == null) {
+        if (userWallet.isEmpty()) {
             throw new NoSuchElementException("Invalid wallet code");
         }
-        double balance = userWallet.getBalance();
+        UserWallet uW = userWallet.get();
+
+        double balance = uW.getBalance();
         double newBalance = balance + walletFundingDto.getAmount();
         WalletTransaction walletTransaction = new WalletTransaction();
         walletTransaction.setFullName(walletFundingDto.getFullName());
@@ -40,9 +43,9 @@ public class UserWalletServiceImp implements UserWalletService {
         walletTransaction.setAccountNumber(walletFundingDto.getAccountNumber());
         walletTransaction.setCCNumber(walletFundingDto.getCCNumber());
         walletTransaction.setAmount(walletFundingDto.getAmount());
-        userWallet.setBalance(newBalance);
-        walletTransaction.setWallet(userWallet);
-        userWalletRepository.save(userWallet);
+        uW.setBalance(newBalance);
+        walletTransaction.setWallet(uW);
+        userWalletRepository.save(uW);
         walletTransactionService.getUserWalletRepository().save(walletTransaction);
         ResponseDto responseDto = new ResponseDto();
         responseDto.setResponse("Transaction successful");
@@ -51,7 +54,7 @@ public class UserWalletServiceImp implements UserWalletService {
     }
 
     @Override
-    public UserWallet findWalletByUserId(Long userId) {
+    public UserWallet findWalletByUserId(String userId) {
         return userWalletRepository.findUserWalletByUserId(userId);
     }
 

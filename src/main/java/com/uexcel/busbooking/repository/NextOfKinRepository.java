@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NextOfKinRepository extends JpaRepository<NextOfKin, Long> {
+public interface NextOfKinRepository extends JpaRepository<NextOfKin, String> {
     @Query(nativeQuery = true, value = "SELECT * FROM next_of_kin WHERE user_id=:userId")
-    NextOfKin findByUserId(Long userId);
+    NextOfKin findByUserId(String userId);
 }

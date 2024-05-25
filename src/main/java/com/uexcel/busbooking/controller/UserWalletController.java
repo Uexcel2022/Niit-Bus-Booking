@@ -28,13 +28,13 @@ public class UserWalletController {
     }
 
     @GetMapping("/api/v1/user_wallet/{userId}")
-    public ResponseEntity<UserWallet> findWalletUserById(@PathVariable Long userId){
+    public ResponseEntity<UserWallet> findWalletUserById(@PathVariable String userId){
         return ResponseEntity.ok().body(userWalletService.findWalletByUserId(userId));
 
     }
 
     @GetMapping("/api/v1/user_wallet_trans/{walletId}")
-    public ResponseEntity<List<WalletTransaction>> findWalletTransactionById(@PathVariable Long walletId){
+    public ResponseEntity<List<WalletTransaction>> findWalletTransactionById(@PathVariable String walletId){
        return ResponseEntity.ok().body(walletTransactionService.findWalletTransByWalletId(walletId));
 
     }

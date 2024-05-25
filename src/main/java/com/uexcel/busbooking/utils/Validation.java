@@ -1,36 +1,33 @@
-package com.uexcel.busbooking.validation;
+package com.uexcel.busbooking.utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Validation {
-    public  static boolean checkNullBlank(String str) {
+    public  boolean checkNullBlank(String str) {
         return str == null || str.trim().isEmpty();
     }
 
-    public static boolean checkName(String name){
+    public boolean checkName(String name){
 
-        if (name == null || name.trim().isEmpty()){
-            return false;
-        }
-        if(!name.matches("[a-zA-Z]+")){
-            return false;
-        }
-        return name.trim().length() >= 2;
+        return !name.matches("[a-zA-Z]{2,}");
     }
 
-    public static boolean checkEmail(String email){
-        if (email == null || email.trim().isEmpty()){
-            return false;
-        }
-        return email.matches("[a-z]+\\.?[a-z0-9_]*@[a-z0-9]+\\.?[a-z0-9]+\\.[a-z]{2,3}");
+    public static boolean checkDaDate(String date){
+        return !date.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
-    public static boolean checkPhone(String phone){
-        if (phone == null || phone.trim().isEmpty()){
-            return true;
-        }
+    public  boolean checkEmail(String email){
+
+        return !email.matches("[a-z]+\\.?[a-z0-9_]*@[a-z0-9]+\\.?[a-z0-9]+\\.[a-z]{2,3}");
+    }
+
+    public boolean checkPhone(String phone){
+
         return !phone.matches("(\\+234|0)[7-9][01][0-9]{8}");
     }
 
-    public static boolean checkPassword(String password){
+    public boolean checkPassword(String password){
         if (password == null || password.trim().isEmpty() || password.length() < 6  || password.length() > 16){
             return true;
         }

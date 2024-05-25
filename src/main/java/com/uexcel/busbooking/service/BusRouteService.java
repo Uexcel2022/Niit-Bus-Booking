@@ -24,7 +24,7 @@ public interface BusRouteService {
 
     Route findRoutByName(String routeName);
 
-    ResponseDto updateRoute(Long routeId, BusRouteDto busRouteDto);
+    ResponseDto updateRoute(String routeId, BusRouteDto busRouteDto);
 
-    ResponseDto updateBus(Long busId, BusRouteDto busRouteDto);
+    ResponseDto updateBus(String busId, BusRouteDto busRouteDto);
 }

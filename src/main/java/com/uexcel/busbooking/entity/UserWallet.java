@@ -9,9 +9,8 @@ import java.util.UUID;
 @Data
 public class UserWallet {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String walletCode = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private double balance;
     private String status;
 

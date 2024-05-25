@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class Route {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String routeName;
     private double price;
 

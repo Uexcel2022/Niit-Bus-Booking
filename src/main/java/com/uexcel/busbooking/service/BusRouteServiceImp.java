@@ -1,7 +1,7 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.BusRouteDto;
-import com.uexcel.busbooking.validation.Validation;
+import com.uexcel.busbooking.utils.Validation;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.entity.Route;
@@ -18,11 +18,13 @@ import java.util.Optional;
 public class BusRouteServiceImp implements BusRouteService{
     private final RouteRepository routeRepository;
     private final BusRepository busRepository;
+    private final Validation validation;
 
     public BusRouteServiceImp(RouteRepository routeRepository,
-                              BusRepository busRepository) {
+                              BusRepository busRepository, Validation validation) {
         this.routeRepository = routeRepository;
         this.busRepository = busRepository;
+        this.validation = validation;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class BusRouteServiceImp implements BusRouteService{
     }
 
     @Override
-    public ResponseDto updateRoute(Long routeId, BusRouteDto busRouteDto) {
+    public ResponseDto updateRoute(String routeId, BusRouteDto busRouteDto) {
         Optional<Route> route = routeRepository.findById(routeId);
         if(route.isPresent()) {
             Route routeToUpdate = route.get();
@@ -88,18 +90,18 @@ public class BusRouteServiceImp implements BusRouteService{
     }
 
     @Override
-    public ResponseDto updateBus(Long busId, BusRouteDto busRouteDto) {
+    public ResponseDto updateBus(String busId, BusRouteDto busRouteDto) {
         Optional<Bus> bus = busRepository.findById(busId);
         if(bus.isPresent()) {
             Bus busToUpdate = bus.get();
 
-            if(Validation.checkNullBlank(busRouteDto.getBusCode())) {
+            if(validation.checkNullBlank(busRouteDto.getBusCode())) {
                 busToUpdate.setBusCode(busRouteDto.getBusCode());
             }
             if(busRouteDto.getBusCapacity() != 0) {
                 busToUpdate.setBusCapacity(busRouteDto.getBusCapacity());
             }
-            if(Validation.checkNullBlank(busRouteDto.getBrand())) {
+            if(validation.checkNullBlank(busRouteDto.getBrand())) {
                 busToUpdate.setBrand(busRouteDto.getBrand());
             }
             if(busRouteDto.getServiceStartDate()!= null) {
@@ -108,6 +110,7 @@ public class BusRouteServiceImp implements BusRouteService{
             if(busRouteDto.getServiceEndDate()!= null) {
                 busToUpdate.setServiceStartDate(busRouteDto.getServiceStartDate());
             }
+
             busRepository.save(busToUpdate);
             ResponseDto responseDto = new ResponseDto();
             responseDto.setResponse("Bus updated successfully");

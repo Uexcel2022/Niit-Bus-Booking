@@ -8,5 +8,5 @@ import java.util.List;
 public interface WalletTransactionService {
     WallTransactionRepository getUserWalletRepository();
 
-   List<WalletTransaction> findWalletTransByWalletId(Long id);
+   List<WalletTransaction> findWalletTransByWalletId(String id);
 }

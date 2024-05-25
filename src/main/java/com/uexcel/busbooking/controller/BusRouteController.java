@@ -46,7 +46,7 @@ public class BusRouteController {
 
 
     @PutMapping("/api/v1/update_bus/{id}")
-    public ResponseEntity<ResponseDto> updateBus(@PathVariable("id") Long busId,
+    public ResponseEntity<ResponseDto> updateBus(@PathVariable("id") String busId,
                                                  @RequestBody BusRouteDto busRouteDto) {
         return ResponseEntity.ok().body(busRouteService.updateBus(busId,busRouteDto));
     }
@@ -63,7 +63,7 @@ public class BusRouteController {
     }
 
     @PutMapping("/api/v1/update_route/{id}")
-    public ResponseEntity<ResponseDto> updateRoute(@PathVariable("id") Long routeId,
+    public ResponseEntity<ResponseDto> updateRoute(@PathVariable("id") String routeId,
                                                  @RequestBody BusRouteDto busRouteDto) {
         return ResponseEntity.ok().body(busRouteService.updateRoute(routeId,busRouteDto));
     }

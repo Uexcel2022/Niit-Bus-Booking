@@ -30,7 +30,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User findByUserById(Long id) {
+    public User findByUserById(String id) {
         Optional<User> signup = userRepository.findById(id);
         if (signup.isPresent()) {
             return signup.get();
@@ -43,7 +43,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(String id, User updatedUser) {
         Optional<User> signupOptional = userRepository.findById(id);
         if (signupOptional.isPresent()) {
             User oldUser = signupOptional.get();

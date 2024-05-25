@@ -5,7 +5,8 @@ import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.User;
 import com.uexcel.busbooking.entity.UserWallet;
-import com.uexcel.busbooking.validation.Validation;
+import com.uexcel.busbooking.exception.BadRequestException;
+import com.uexcel.busbooking.utils.Validation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,12 +16,14 @@ public class SignupServiceImp implements SignupService{
     private final UserService userService;
     private final UserWalletService userWalletService;
     private final NextOfKinService nextOfKinService;
+    private final Validation validation;
       public SignupServiceImp(UserService userService,
                               UserWalletService userWalletService,
-              NextOfKinService nextOfKinService){
+                              NextOfKinService nextOfKinService, Validation validation){
           this.userService = userService;
           this.userWalletService = userWalletService;
           this.nextOfKinService = nextOfKinService;
+          this.validation = validation;
       }
 
     public ResponseDto processSignup(RegistrationData registrationData) {
@@ -28,57 +31,65 @@ public class SignupServiceImp implements SignupService{
           User isExist = userService.getUserRepository()
                   .findByEmailOrPhoneNumber(registrationData.getEmail(),registrationData.getPhoneNumber());
           if(isExist != null){
-              throw new RuntimeException("User already exists. Use another email or phone number to register.");
+              throw new BadRequestException("This email or phone number has already been used.");
           }
+
+//          boolean isExistsIgnoreCase = userService.getUserRepository()
+//                  .existsByEmailIgnoreCase(registrationData.getEmail());
 
 
         User user = new User();
         NextOfKin nextOfKin = new NextOfKin();
         UserWallet userWallet = new UserWallet();
 
-        if(!Validation.checkName(registrationData.getFirstName())){
-            throw new RuntimeException("Name is not valid.");
+        if(validation.checkName(registrationData.getFirstName())){
+            throw new BadRequestException("Name is not valid.");
         }
-        if(!Validation.checkName(registrationData.getNFirstName())){
-            throw new RuntimeException("Name is not valid.");
+        if(validation.checkName(registrationData.getNFirstName())){
+            throw new BadRequestException("Name is not valid.");
         }
-        if(!Validation.checkName(registrationData.getLastName())){
-            throw new RuntimeException("Name is not valid.");
+        if(validation.checkName(registrationData.getLastName())){
+            throw new BadRequestException("Name is not valid.");
         }
-        if(!Validation.checkName(registrationData.getNLastName())){
-            throw new RuntimeException("Name is not valid.");
+        if(validation.checkName(registrationData.getNLastName())){
+            throw new BadRequestException("Name is not valid.");
         }
-        if(!Validation.checkEmail(registrationData.getEmail())){
-            throw new RuntimeException("Email is not valid.");
+        if(validation.checkEmail(registrationData.getEmail())){
+            throw new BadRequestException("Email is not valid.");
         }
-         if(Validation.checkPhone(registrationData.getPhoneNumber())){
-             throw new RuntimeException("User phone number is not valid.");
+         if(validation.checkPhone(registrationData.getPhoneNumber())){
+             throw new BadRequestException("User phone number is not valid.");
          }
 
-        if(Validation.checkPhone(registrationData.getNPhoneNumber())){
-            throw new RuntimeException("Next of kin phone number is not valid.");
+        if(validation.checkPhone(registrationData.getNPhoneNumber())){
+            throw new BadRequestException("Next of kin phone number is not valid.");
         }
 
-        if(Validation.checkNullBlank(registrationData.getAddress())){
-            throw new RuntimeException("Address is required.");
+        if(validation.checkNullBlank(registrationData.getAddress())){
+            throw new BadRequestException("Address is required.");
         }
 
-        if(Validation.checkNullBlank(registrationData.getLga())){
-            throw new RuntimeException("Local Government Area is required.");
+        if(validation.checkNullBlank(registrationData.getLga())){
+            throw new BadRequestException("Local Government Area is required.");
 
         }
 
-        if(Validation.checkNullBlank(registrationData.getState())){
-            throw new RuntimeException("State is required.");
+        if(validation.checkNullBlank(registrationData.getState())){
+            throw new BadRequestException("State is required.");
         }
 
-        if(Validation.checkNullBlank(registrationData.getBirthDate())){
-            throw new RuntimeException("Birth date is required.");
+        if(!Validation.checkDaDate(registrationData.getBirthDate())){
+            if(!LocalDate.parse(registrationData.getBirthDate()).isBefore(LocalDate.now())){
+                throw new BadRequestException("Birth date is not valid.");
+            }
+
+        } else {
+            throw new BadRequestException("Birth date is invalid.");
         }
 
-        if(Validation.checkPassword(registrationData.getPassword())){
-            throw new RuntimeException("Password must be >= 6 character and must contain at least one uppercase," +
-                    " number and special character; not less than 6 and not more than 8 characters");
+        if(validation.checkPassword(registrationData.getPassword())){
+            throw new BadRequestException("Password must be >= 6 character and must contain at least one uppercase," +
+                    " number and special character; not less than 6 and not more than 16 characters");
         }
 
 

@@ -10,7 +10,7 @@ public interface BookingCheckinService {
 
 //    Bus addBus(BusRouteDto busRouteDto);
 
-    BookingInfoDto processBooking(Long userId, Long routeId);
+    BookingInfoDto processBooking(String userId, String routeId);
 
     ResponseDto processCheckin(CheckinDto checkinDto);
 }

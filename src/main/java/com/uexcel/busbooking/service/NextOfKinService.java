@@ -7,10 +7,10 @@ import com.uexcel.busbooking.repository.NextOfKinRepository;
 public interface NextOfKinService {
     NextOfKinRepository getNextOfKinRepository();
 
-    NextOfKin findNextOfKinByUsrId(Long id);
+    NextOfKin findNextOfKinByUsrId(String id);
 
-    NextOfKin findByNextOfKinById(Long id);
+    NextOfKin findByNextOfKinById(String id);
 
-    ResponseDto updateNextOfKin(Long id, NextOfKin nextOfKin);
+    ResponseDto updateNextOfKin(String id, NextOfKin nextOfKin);
 
 }

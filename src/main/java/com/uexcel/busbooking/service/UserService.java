@@ -11,10 +11,10 @@ public interface UserService {
 
     User findByUserByEmail(UseEmailPasswordDto useEmailPasswordDto);
 
-    User findByUserById(Long id);
+    User findByUserById(String id);
 
     List<User> findAllUsers();
 
-    User updateUser(Long id, User user);
+    User updateUser(String id, User user);
 
 }

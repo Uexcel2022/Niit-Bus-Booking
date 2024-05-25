@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface WallTransactionRepository extends JpaRepository<WalletTransaction,Long> {
+public interface WallTransactionRepository extends JpaRepository<WalletTransaction,String> {
 //    @Query(nativeQuery = true, value = "SELECT * FROM ")
-  List<WalletTransaction> findByWalletId(Long userId);
+  List<WalletTransaction> findByWalletId(String userId);
 }

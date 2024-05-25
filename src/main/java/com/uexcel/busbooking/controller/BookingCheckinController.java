@@ -16,8 +16,8 @@ public class BookingCheckinController {
 
 
     @GetMapping("/api/v1/booking/{userId}/{routeId}")
-    public ResponseEntity<BookingInfoDto> book(@PathVariable("userId") Long userId,
-                                               @PathVariable("routeId") Long routeId){
+    public ResponseEntity<BookingInfoDto> book(@PathVariable("userId") String userId,
+                                               @PathVariable("routeId") String routeId){
         return ResponseEntity.ok().body(bookingCheckinService.processBooking(userId,routeId));
 
     }

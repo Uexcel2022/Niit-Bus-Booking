@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Data
 public class Checkin {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     @Column(nullable = false,updatable = false)
     private String busCode;
     @Column(nullable = false,updatable = false)

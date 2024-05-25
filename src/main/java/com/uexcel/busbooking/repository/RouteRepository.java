@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface RouteRepository extends CrudRepository<Route, Long> {
+public interface RouteRepository extends CrudRepository<Route, String> {
     Route findByRouteName(String routeName);
 }

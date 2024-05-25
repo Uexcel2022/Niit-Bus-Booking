@@ -9,5 +9,5 @@ public interface UserWalletService {
 
     ResponseDto processWalletFunding(WalletFundingDto walletFundingDto);
 
-    UserWallet findWalletByUserId(Long userId);
+    UserWallet findWalletByUserId(String userId);
 }
