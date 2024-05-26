@@ -1,6 +1,6 @@
 package com.uexcel.busbooking.controller;
 
-import com.uexcel.busbooking.dto.RegistrationData;
+import com.uexcel.busbooking.dto.SignupDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.service.SignupService;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ public class SignupController {
     }
 
     @PostMapping("/api/v1/signup")
-    public ResponseEntity<ResponseDto> signup(@RequestBody RegistrationData registrationData) {
-        return  ResponseEntity.status(201).body(signupService.processSignup(registrationData));
+    public ResponseEntity<ResponseDto> signup(@RequestBody SignupDto signupDto) {
+        return  ResponseEntity.status(201).body(signupService.processSignup(signupDto));
     }
 
 }

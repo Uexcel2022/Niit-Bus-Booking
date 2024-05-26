@@ -20,7 +20,7 @@ public class Booking {
     private String ticketStatus;
 
     @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER,optional = false)
-    private User user;
+    private Client client;
 
     @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER,optional = false)
     private Route route;

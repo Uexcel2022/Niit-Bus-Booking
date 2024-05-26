@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class User {
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -24,9 +24,4 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-//    @OneToOne(mappedBy = "user")
-//    private NextOfKin nextOfKin;
-//
-//    @OneToOne(mappedBy = "user" )
-//    private UserWallet userWallet;
 }

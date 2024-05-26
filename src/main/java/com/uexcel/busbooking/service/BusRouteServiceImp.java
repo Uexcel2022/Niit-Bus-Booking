@@ -1,6 +1,7 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.BusRouteDto;
+import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Validation;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
@@ -119,19 +120,30 @@ public class BusRouteServiceImp implements BusRouteService{
     }
 
     @Override
-    public Bus addBus(BusRouteDto busRouteDto) {
+    public ResponseDto addBus(BusRouteDto busRouteDto) {
+        Route rt;
+        Optional<Route> route = routeRepository.findById(busRouteDto.getRouteId());
+        if(route.isPresent()) {
+            rt = route.get();
+        }else {throw new CustomException("Invalid route id","404");}
+
         Bus bus = new Bus();
-        Route route = new Route();
         bus.setBusCode(busRouteDto.getBusCode());
         bus.setBrand(busRouteDto.getBrand());
         bus.setModel(busRouteDto.getModel());
         bus.setBusCapacity(busRouteDto.getBusCapacity());
         bus.setServiceStartDate(busRouteDto.getServiceStartDate());
+        bus.setRoute(rt);
+        busRepository.save(bus);
+        return new ResponseDto("Bus added successfully");
+    }
+
+    public ResponseDto addRout(BusRouteDto busRouteDto) {
+        Route route = new Route();
         route.setRouteName(busRouteDto.getRouteName());
         route.setPrice(busRouteDto.getPrice());
-        bus.setRoute(route);
         routeRepository.save(route);
-        return busRepository.save(bus);
+        return new ResponseDto("Route added successfully");
     }
 
 }

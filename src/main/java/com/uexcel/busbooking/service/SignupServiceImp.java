@@ -1,11 +1,11 @@
 package com.uexcel.busbooking.service;
 
-import com.uexcel.busbooking.dto.RegistrationData;
+import com.uexcel.busbooking.dto.SignupDto;
 import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.entity.NextOfKin;
-import com.uexcel.busbooking.entity.User;
-import com.uexcel.busbooking.entity.UserWallet;
-import com.uexcel.busbooking.exception.BadRequestException;
+import com.uexcel.busbooking.entity.ClientWallet;
+import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Validation;
 import org.springframework.stereotype.Service;
 
@@ -13,107 +13,107 @@ import java.time.LocalDate;
 
 @Service
 public class SignupServiceImp implements SignupService{
-    private final UserService userService;
-    private final UserWalletService userWalletService;
+    private final ClientService clientService;
+    private final ClientWalletService clientWalletService;
     private final NextOfKinService nextOfKinService;
     private final Validation validation;
-      public SignupServiceImp(UserService userService,
-                              UserWalletService userWalletService,
+      public SignupServiceImp(ClientService clientService,
+                              ClientWalletService clientWalletService,
                               NextOfKinService nextOfKinService, Validation validation){
-          this.userService = userService;
-          this.userWalletService = userWalletService;
+          this.clientService = clientService;
+          this.clientWalletService = clientWalletService;
           this.nextOfKinService = nextOfKinService;
           this.validation = validation;
       }
 
-    public ResponseDto processSignup(RegistrationData registrationData) {
+    public ResponseDto processSignup(SignupDto signupDto) {
 
-          User isExist = userService.getUserRepository()
-                  .findByEmailOrPhoneNumber(registrationData.getEmail(),registrationData.getPhoneNumber());
-          if(isExist != null){
-              throw new BadRequestException("This email or phone number has already been used.");
+          if(clientService.getUserRepository()
+                  .findByEmail(signupDto.getEmail()) != null){
+              throw new CustomException("The email is in use.","400");
           }
 
-//          boolean isExistsIgnoreCase = userService.getUserRepository()
-//                  .existsByEmailIgnoreCase(registrationData.getEmail());
+        if(clientService.getUserRepository()
+                .findByPhoneNumber(signupDto.getPhoneNumber()) != null){
+            throw new CustomException("The phone number is in use.","400");
+        }
 
-
-        User user = new User();
+        Client client = new Client();
         NextOfKin nextOfKin = new NextOfKin();
-        UserWallet userWallet = new UserWallet();
+        ClientWallet clientWallet = new ClientWallet();
 
-        if(validation.checkName(registrationData.getFirstName())){
-            throw new BadRequestException("Name is not valid.");
+        if(validation.checkName(signupDto.getFirstName())){
+            throw new CustomException("First name is not valid.","400");
         }
-        if(validation.checkName(registrationData.getNFirstName())){
-            throw new BadRequestException("Name is not valid.");
+        if(validation.checkName(signupDto.getNFirstName())){
+            throw new CustomException("Next of kin first name is not valid.","400");
         }
-        if(validation.checkName(registrationData.getLastName())){
-            throw new BadRequestException("Name is not valid.");
+        if(validation.checkName(signupDto.getLastName())){
+            throw new CustomException("Last name is not valid.","400");
         }
-        if(validation.checkName(registrationData.getNLastName())){
-            throw new BadRequestException("Name is not valid.");
+        if(validation.checkName(signupDto.getNLastName())){
+            throw new CustomException("Next of kin last name is not valid.","400");
         }
-        if(validation.checkEmail(registrationData.getEmail())){
-            throw new BadRequestException("Email is not valid.");
+        if(validation.checkEmail(signupDto.getEmail())){
+            throw new CustomException("Email is not valid.","400");
         }
-         if(validation.checkPhone(registrationData.getPhoneNumber())){
-             throw new BadRequestException("User phone number is not valid.");
+         if(validation.checkPhone(signupDto.getPhoneNumber())){
+             throw new CustomException("User phone number is not valid.","400");
          }
 
-        if(validation.checkPhone(registrationData.getNPhoneNumber())){
-            throw new BadRequestException("Next of kin phone number is not valid.");
+        if(validation.checkPhone(signupDto.getNPhoneNumber())){
+            throw new CustomException("Next of kin phone number is not valid.","400");
         }
 
-        if(validation.checkNullBlank(registrationData.getAddress())){
-            throw new BadRequestException("Address is required.");
+        if(validation.checkNullBlank(signupDto.getAddress())){
+            throw new CustomException("Address is required.","400");
         }
 
-        if(validation.checkNullBlank(registrationData.getLga())){
-            throw new BadRequestException("Local Government Area is required.");
+        if(validation.checkNullBlank(signupDto.getLga())){
+            throw new CustomException("Local Government Area is required.","400");
 
         }
 
-        if(validation.checkNullBlank(registrationData.getState())){
-            throw new BadRequestException("State is required.");
+        if(validation.checkNullBlank(signupDto.getState())){
+            throw new CustomException("State is required.","400");
         }
 
-        if(!Validation.checkDaDate(registrationData.getBirthDate())){
-            if(!LocalDate.parse(registrationData.getBirthDate()).isBefore(LocalDate.now())){
-                throw new BadRequestException("Birth date is not valid.");
+        if(!Validation.checkDaDate(signupDto.getBirthDate())){
+            if(!LocalDate.parse(signupDto.getBirthDate()).isBefore(LocalDate.now())){
+                throw new CustomException("Birth date is not valid.","400");
             }
 
         } else {
-            throw new BadRequestException("Birth date is invalid.");
+            throw new CustomException("Birth date is invalid.","400");
         }
 
-        if(validation.checkPassword(registrationData.getPassword())){
-            throw new BadRequestException("Password must be >= 6 character and must contain at least one uppercase," +
-                    " number and special character; not less than 6 and not more than 16 characters");
+        if(validation.checkPassword(signupDto.getPassword())){
+            throw new CustomException("Password must be >= 6 character and must contain at least one uppercase," +
+                    " number and special character; not less than 6 and not more than 16 characters","400");
         }
 
 
-        user.setFirstName(registrationData.getFirstName());
-        user.setLastName(registrationData.getLastName());
-        user.setBirthDate(LocalDate.parse(registrationData.getBirthDate()));
-        user.setEmail(registrationData.getEmail());
-        user.setPassword(registrationData.getPassword());
-        user.setPhoneNumber(registrationData.getPhoneNumber());
+        client.setFirstName(signupDto.getFirstName());
+        client.setLastName(signupDto.getLastName());
+        client.setBirthDate(LocalDate.parse(signupDto.getBirthDate()));
+        client.setEmail(signupDto.getEmail());
+        client.setPassword(signupDto.getPassword());
+        client.setPhoneNumber(signupDto.getPhoneNumber());
 
-        nextOfKin.setNFirstName(registrationData.getNFirstName());
-        nextOfKin.setNLastName(registrationData.getNLastName());
-        nextOfKin.setAddress(registrationData.getAddress());
-        nextOfKin.setLga(registrationData.getLga());
-        nextOfKin.setState(registrationData.getState());
-        nextOfKin.setNPhoneNumber(registrationData.getNPhoneNumber());
+        nextOfKin.setNFirstName(signupDto.getNFirstName());
+        nextOfKin.setNLastName(signupDto.getNLastName());
+        nextOfKin.setAddress(signupDto.getAddress());
+        nextOfKin.setLga(signupDto.getLga());
+        nextOfKin.setState(signupDto.getState());
+        nextOfKin.setNPhoneNumber(signupDto.getNPhoneNumber());
 
-        userWallet.setBalance(0.0);
-        userWallet.setStatus("active");
+        clientWallet.setBalance(0.0);
+        clientWallet.setStatus("active");
 
-        userService.getUserRepository().save(user);
-        nextOfKin.setUser(user);
-        userWallet.setUser(user);
-        userWalletService.getUserWalletRepository().save(userWallet);
+        clientService.getUserRepository().save(client);
+        nextOfKin.setClient(client);
+        clientWallet.setClient(client);
+        clientWalletService.getUserWalletRepository().save(clientWallet);
         nextOfKinService.getNextOfKinRepository().save(nextOfKin);
         ResponseDto responseDto = new ResponseDto();
          responseDto.setResponse("You have successfully registered!");

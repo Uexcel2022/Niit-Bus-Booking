@@ -10,7 +10,8 @@ import com.uexcel.busbooking.repository.RouteRepository;
 import java.util.List;
 
 public interface BusRouteService {
-    Bus addBus(BusRouteDto busRouteDto);
+    public ResponseDto addRout(BusRouteDto busRouteDto);
+    ResponseDto addBus(BusRouteDto busRouteDto);
     public RouteRepository getRouteRepository();
     public BusRepository getBusRepository();
 

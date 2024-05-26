@@ -22,6 +22,6 @@ public class WalletTransaction {
     private LocalDate transactionDate = LocalDate.now();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    private UserWallet wallet;
+    private ClientWallet wallet;
 
 }

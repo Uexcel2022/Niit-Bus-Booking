@@ -8,17 +8,30 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 
 @ControllerAdvice
 @ResponseStatus
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-
+    ErrorMessage errorMessage;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> badRequest(BadRequestException exception, WebRequest request) {
-        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+    public ResponseEntity<String> badRequest(CustomException exception, WebRequest request) {
+
+        if (exception.getErrorCode().equals("400")) {
+            errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+
+        }
+
+        if (exception.getErrorCode().equals("404")) {
+            errorMessage = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        }
+
+        if (exception.getErrorCode().equals("402")) {
+            errorMessage = new ErrorMessage(HttpStatus.PAYMENT_REQUIRED, exception.getMessage());
+
+        }
+
         return ResponseEntity.status(errorMessage.getStatus()).body(errorMessage.getMessage());
     }
-
 }

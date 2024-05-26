@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface WallTransactionRepository extends JpaRepository<WalletTransaction,String> {
 //    @Query(nativeQuery = true, value = "SELECT * FROM ")
-  List<WalletTransaction> findByWalletId(String userId);
+  List<WalletTransaction> findByWalletId(String clientId);
 }

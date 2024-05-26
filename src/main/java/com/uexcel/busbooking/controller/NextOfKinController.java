@@ -14,17 +14,17 @@ public class NextOfKinController {
         this.nextOfKinService = nextOfKinService;
     }
 
-    @GetMapping("/api/v1/next_of_kin_user_id/{userId}")
+    @GetMapping("/api/v1/next-of-kin-user-id/{userId}")
     public ResponseEntity<NextOfKin> findNextOfKinByUserId(@PathVariable("userId") String useId){
         return ResponseEntity.ok().body(nextOfKinService.findNextOfKinByUsrId(useId));
     }
 
-    @GetMapping("/api/v1/next_of_kin/{id}")
+    @GetMapping("/api/v1/next-of-kin/{id}")
     public ResponseEntity<NextOfKin> viewNextOfKin(@PathVariable("id") String id){
         return ResponseEntity.ok().body(nextOfKinService.findByNextOfKinById(id));
     }
 
-    @PutMapping("/api/v1/update_next_of_kin/{id}")
+    @PutMapping("/api/v1/update-next-of-kin/{id}")
     public ResponseEntity<ResponseDto> updateNextOfKinById(@PathVariable("id") String id,
                                                            @RequestBody NextOfKin nextOfKin){
         return ResponseEntity.status(200).body(nextOfKinService.updateNextOfKin(id, nextOfKin));
