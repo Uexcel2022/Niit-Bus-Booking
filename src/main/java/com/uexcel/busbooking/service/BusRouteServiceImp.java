@@ -42,11 +42,11 @@ public class BusRouteServiceImp implements BusRouteService{
     public ResponseDto updateBusRoute(String busCode, String routeName) {
         Bus bus = busRepository.findByBusCode(busCode);
         if(bus == null) {
-            throw new RuntimeException("Invalid bus code");
+            throw new CustomException("Invalid bus code","400");
         }
         Route route = routeRepository.findByRouteName(routeName);
         if(route == null) {
-            throw new RuntimeException("Invalid route name");
+            throw new CustomException("Invalid route name","400");
         }
 
         bus.setRoute(route);
@@ -87,7 +87,7 @@ public class BusRouteServiceImp implements BusRouteService{
             ResponseDto responseDto = new ResponseDto();
             responseDto.setResponse("Route updated successfully");
             return responseDto;
-        } else throw new RuntimeException("Invalid route id");
+        } else throw new CustomException("Invalid route id","400");
     }
 
     @Override
@@ -116,7 +116,7 @@ public class BusRouteServiceImp implements BusRouteService{
             ResponseDto responseDto = new ResponseDto();
             responseDto.setResponse("Bus updated successfully");
             return responseDto;
-        } else throw new RuntimeException("Invalid bus id");
+        } else throw new CustomException("Invalid bus id","400");
     }
 
     @Override
@@ -145,5 +145,6 @@ public class BusRouteServiceImp implements BusRouteService{
         routeRepository.save(route);
         return new ResponseDto("Route added successfully");
     }
+
 
 }

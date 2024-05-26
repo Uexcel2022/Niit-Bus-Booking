@@ -1,6 +1,7 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.BookingInfoDto;
+import com.uexcel.busbooking.dto.BusCheckinQueryDto;
 import com.uexcel.busbooking.dto.CheckinDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.*;
@@ -8,6 +9,7 @@ import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -111,7 +113,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         }
 
         checkin.setBusCode(bus.getBusCode());
-        checkin.setCurrentBusRouteId(bus.getRoute().getId());
+        checkin.setBusCurrentRouteId(bus.getRoute().getId());
         booking.setTicketStatus("used");
         checkin.setBooking(booking);
         bookingRepository.save(booking);
@@ -120,7 +122,49 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         responseDto.setResponse("Checkin successful.");
         return responseDto;
     }
+
+    public List<Checkin> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
+        List<Checkin> checkin = checkinRepository.findByBusCurrentRouteId(
+                busCheckinQueryDto.getBusCurrentRouteId());
+        if(checkin == null){
+            throw new CustomException("Route not found.","404");
+        }
+        return checkin;
+    }
+
+    public List<Checkin> findBusesOnRouteByDate(BusCheckinQueryDto busCheckinQueryDto) {
+        List<Checkin> checkin = checkinRepository.findByBusCurrentRouteIdAndCheckinDate(
+                busCheckinQueryDto.getBusCurrentRouteId(), busCheckinQueryDto.getDate());
+        if(checkin == null){
+            throw new CustomException("Not found.","404");
+        }
+        return checkin;
+    }
+
+    public List<Checkin> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
+        List<Checkin> checkin = checkinRepository.findByBusCode(busCheckinQueryDto.getBusCode());
+        if(checkin == null){
+            throw new CustomException("Not found.","404");
+        }
+        return checkin;
+    }
+
+    @Override
+    public List<Checkin> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto) {
+        List<Checkin> checkin = checkinRepository.findByBusCodeAndCheckinDate(
+                 busCheckinQueryDto.getBusCode(),busCheckinQueryDto.getDate());
+        if(checkin == null){
+            throw new CustomException("Not found.","404");
+        }
+        return checkin;
+    }
+
+
 }
+
+
+
+
 
 //OLD CODE
 //    @Override

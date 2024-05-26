@@ -1,10 +1,9 @@
 package com.uexcel.busbooking.service;
 
-import com.uexcel.busbooking.dto.BookingInfoDto;
-import com.uexcel.busbooking.dto.BusRouteDto;
-import com.uexcel.busbooking.dto.CheckinDto;
-import com.uexcel.busbooking.dto.ResponseDto;
-import com.uexcel.busbooking.entity.Bus;
+import com.uexcel.busbooking.dto.*;
+import com.uexcel.busbooking.entity.Checkin;
+
+import java.util.List;
 
 public interface BookingCheckinService {
 
@@ -13,4 +12,12 @@ public interface BookingCheckinService {
     BookingInfoDto processBooking(String userId, String routeId);
 
     ResponseDto processCheckin(CheckinDto checkinDto);
+
+    public List<Checkin> findBusesOnRouteByDate(BusCheckinQueryDto bookingQueryDto);
+
+    public List<Checkin> findBusesOnRoute(BusCheckinQueryDto bookingQueryDto);
+
+    public List<Checkin> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto);
+
+    List<Checkin> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto);
 }

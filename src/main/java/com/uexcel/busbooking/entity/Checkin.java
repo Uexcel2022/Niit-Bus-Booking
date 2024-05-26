@@ -14,7 +14,7 @@ public class Checkin {
     @Column(nullable = false,updatable = false)
     private String busCode;
     @Column(nullable = false,updatable = false)
-    private String currentBusRouteId;
+    private String busCurrentRouteId;
 
     @OneToOne(cascade = CascadeType.PERSIST,optional = false)
     private Booking booking;
