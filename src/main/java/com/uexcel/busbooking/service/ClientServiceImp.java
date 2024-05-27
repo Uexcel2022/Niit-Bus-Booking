@@ -24,7 +24,7 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Override
-    public ClientRepository getUserRepository() {
+    public ClientRepository getClientRepository() {
         return clientRepository;
     }
 

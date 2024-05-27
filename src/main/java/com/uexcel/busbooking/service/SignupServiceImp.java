@@ -14,26 +14,26 @@ import java.time.LocalDate;
 @Service
 public class SignupServiceImp implements SignupService{
     private final ClientService clientService;
-    private final ClientWalletService clientWalletService;
+    private final WalletService walletService;
     private final NextOfKinService nextOfKinService;
     private final Validation validation;
       public SignupServiceImp(ClientService clientService,
-                              ClientWalletService clientWalletService,
+                              WalletService walletService,
                               NextOfKinService nextOfKinService, Validation validation){
           this.clientService = clientService;
-          this.clientWalletService = clientWalletService;
+          this.walletService = walletService;
           this.nextOfKinService = nextOfKinService;
           this.validation = validation;
       }
 
     public ResponseDto processSignup(SignupDto signupDto) {
 
-          if(clientService.getUserRepository()
+          if(clientService.getClientRepository()
                   .findByEmail(signupDto.getEmail()) != null){
               throw new CustomException("The email is in use.","400");
           }
 
-        if(clientService.getUserRepository()
+        if(clientService.getClientRepository()
                 .findByPhoneNumber(signupDto.getPhoneNumber()) != null){
             throw new CustomException("The phone number is in use.","400");
         }
@@ -78,6 +78,10 @@ public class SignupServiceImp implements SignupService{
             throw new CustomException("State is required.","400");
         }
 
+        if(validation.checkAccountNumber(signupDto.getWalletNumber())){
+            throw new CustomException("The account number is not valid.","400");
+        }
+
         if(!Validation.checkDaDate(signupDto.getBirthDate())){
             if(!LocalDate.parse(signupDto.getBirthDate()).isBefore(LocalDate.now())){
                 throw new CustomException("Birth date is not valid.","400");
@@ -109,11 +113,12 @@ public class SignupServiceImp implements SignupService{
 
         clientWallet.setBalance(0.0);
         clientWallet.setStatus("active");
+        clientWallet.setWalletNumber(signupDto.getWalletNumber());
 
-        clientService.getUserRepository().save(client);
+        clientService.getClientRepository().save(client);
         nextOfKin.setClient(client);
         clientWallet.setClient(client);
-        clientWalletService.getUserWalletRepository().save(clientWallet);
+        walletService.getClientWalletRepository().save(clientWallet);
         nextOfKinService.getNextOfKinRepository().save(nextOfKin);
         ResponseDto responseDto = new ResponseDto();
          responseDto.setResponse("You have successfully registered!");

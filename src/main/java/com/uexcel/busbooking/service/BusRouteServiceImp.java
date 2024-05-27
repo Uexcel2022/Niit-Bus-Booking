@@ -73,7 +73,12 @@ public class BusRouteServiceImp implements BusRouteService{
 
     @Override
     public Route findRoutByName(String routeName) {
-        return routeRepository.findByRouteName(routeName);
+
+        Route route = routeRepository.findByRouteName(routeName);
+        if(route == null) {
+            throw new CustomException("Invalid route name","400");
+        }
+        return route;
     }
 
     @Override

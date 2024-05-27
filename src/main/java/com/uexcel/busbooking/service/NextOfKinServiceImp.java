@@ -7,7 +7,6 @@ import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -28,7 +27,7 @@ public class NextOfKinServiceImp implements NextOfKinService {
         NextOfKin nextOfKin = nextOfKinRepository.findByUserId(userId);
         if(nextOfKin != null) {
             return nextOfKin;
-        } else throw new NoSuchElementException("next of kin not found");
+        } else throw new CustomException("next of kin not found","404");
     }
 
     @Override
@@ -36,7 +35,7 @@ public class NextOfKinServiceImp implements NextOfKinService {
         Optional<NextOfKin> nextOfKin = nextOfKinRepository.findById(id);
         if (nextOfKin.isPresent()) {
             return nextOfKin.get();
-        }else  throw new NoSuchElementException("Next of kin not found");
+        }else  throw new CustomException("Next of kin not found","404");
     }
 
     @Override

@@ -7,6 +7,7 @@ public class SignupDto {
     private String firstName;
     private String lastName;
     private String birthDate;
+    private String walletNumber;
     private String email;
     private String phoneNumber;
     private String password;

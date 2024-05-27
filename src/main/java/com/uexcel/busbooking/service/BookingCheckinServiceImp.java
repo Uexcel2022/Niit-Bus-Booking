@@ -1,14 +1,13 @@
 package com.uexcel.busbooking.service;
 
-import com.uexcel.busbooking.dto.BookingInfoDto;
-import com.uexcel.busbooking.dto.BusCheckinQueryDto;
-import com.uexcel.busbooking.dto.CheckinDto;
-import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.dto.*;
 import com.uexcel.busbooking.entity.*;
 import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,48 +17,48 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
     private final BookingRepository bookingRepository;
     private final ClientService clientService;
     private final CheckinRepository checkinRepository;
-    private  final ClientWalletService clientWalletService;
+    private  final WalletService walletService;
     public BookingCheckinServiceImp(BusRouteService busRouteService,
                                     BookingRepository bookingRepository, ClientService clientService,
-                                    CheckinRepository checkinRepository, ClientWalletService clientWalletService
+                                    CheckinRepository checkinRepository, WalletService walletService
     ) {
         this.busRouteService = busRouteService;
         this.bookingRepository = bookingRepository;
         this.clientService = clientService;
         this.checkinRepository = checkinRepository;
-        this.clientWalletService = clientWalletService;
+        this.walletService = walletService;
     }
 
 
     @Override
-    public BookingInfoDto processBooking(String userId, String routeId) {
+    public BookingInfoDto processBooking(String clientId, String routeId) {
 
-        Booking bk = bookingRepository.findByUserId(userId,routeId);
+        Booking bk = bookingRepository.findByUserId(clientId,routeId);
         if(bk != null){
 
-            throw new RuntimeException("You have unused ticked on this route!!!"+" Ticked Number: "
-                    +bk.getTicketNumber());
+            throw new CustomException("You have unused ticked on this route!!!"+" Ticked Number: "
+                    +bk.getTicketNumber(),"404");
         }
         double price;
         double walletBalance;
         double newWalletBalance;
         BookingInfoDto bookingInfoDto = new BookingInfoDto();
         Booking booking = new Booking();
-        Optional<Client> user = clientService.getUserRepository().findById(userId);
+        Optional<Client> client = clientService.getClientRepository().findById(clientId);
         Client u;
-        if(user.isPresent()){
-            u = user.get();
-        } else throw new RuntimeException("User not found");
+        if(client.isPresent()){
+            u = client.get();
+        } else throw new CustomException("User not found","404");
 
-        ClientWallet wallet = clientWalletService.getUserWalletRepository()
-                .findUserWalletByUserId(userId);
+        ClientWallet wallet = walletService.getClientWalletRepository()
+                .findByClientId(clientId);
         walletBalance = wallet.getBalance();
         Optional<Route> route = busRouteService.getRouteRepository().findById(routeId);
 
         Route r;
         if(route.isPresent()){
             r = route.get();
-        } else throw new RuntimeException("Route not found");
+        } else throw new CustomException("Route not found","404");
 
         price = r.getPrice();
 
@@ -72,6 +71,16 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         booking.setRoute(r);
         booking.setClient(u);
 
+        WalletTransaction walletTransaction = new WalletTransaction();
+        walletTransaction.setBank("Wallet");
+        walletTransaction.setTransactionType("Booking");
+        walletTransaction.setAccountNumber(wallet.getWalletNumber());
+        walletTransaction.setAmount(-r.getPrice());
+        walletTransaction.setWallet(wallet);
+        walletTransaction.setFullName(u.getFirstName() + " " + u.getLastName());
+        walletTransaction.setTransactionDate(LocalDate.now());
+        walletService.getWallTransactionRepository().save(walletTransaction);
+
 
         booking.setTicketStatus("valid");
 
@@ -83,7 +92,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         bookingInfoDto.setBookingDate(booking.getBookingDate());
         bookingInfoDto.setTickStatus(booking.getTicketStatus());
         bookingRepository.save(booking);
-        clientWalletService.getUserWalletRepository().save(wallet);
+        walletService.getClientWalletRepository().save(wallet);
         return bookingInfoDto;
 
     }
@@ -123,80 +132,57 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         return responseDto;
     }
 
-    public List<Checkin> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
+    public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = checkinRepository.findByBusCurrentRouteId(
                 busCheckinQueryDto.getBusCurrentRouteId());
         if(checkin == null){
             throw new CustomException("Route not found.","404");
         }
-        return checkin;
+
+        return filterResultSet(checkin);
     }
 
-    public List<Checkin> findBusesOnRouteByDate(BusCheckinQueryDto busCheckinQueryDto) {
+    public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = checkinRepository.findByBusCurrentRouteIdAndCheckinDate(
                 busCheckinQueryDto.getBusCurrentRouteId(), busCheckinQueryDto.getDate());
         if(checkin == null){
             throw new CustomException("Not found.","404");
         }
-        return checkin;
+        return filterResultSet(checkin);
     }
 
-    public List<Checkin> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
+    public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = checkinRepository.findByBusCode(busCheckinQueryDto.getBusCode());
         if(checkin == null){
             throw new CustomException("Not found.","404");
         }
-        return checkin;
+        return filterResultSet(checkin);
     }
 
     @Override
-    public List<Checkin> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto) {
+    public List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = checkinRepository.findByBusCodeAndCheckinDate(
                  busCheckinQueryDto.getBusCode(),busCheckinQueryDto.getDate());
         if(checkin == null){
             throw new CustomException("Not found.","404");
         }
-        return checkin;
+        return filterResultSet(checkin);
     }
 
-
+    private static   List<BusCheckinInfoDto> filterResultSet(List<Checkin> checkin){
+        List<BusCheckinInfoDto> busCheckinInfo = new ArrayList<>();
+        for(Checkin checkin1 : checkin){
+            BusCheckinInfoDto busCheckinInfoDto = new BusCheckinInfoDto();
+            busCheckinInfoDto.setBookingId(checkin1.getBooking().getId());
+            busCheckinInfoDto.setBusCode(checkin1.getBusCode());
+            busCheckinInfoDto.setRouteName(checkin1.getBooking().getRoute().getRouteName());
+            busCheckinInfoDto.setCheckinDate(checkin1.getCheckinDate());
+            busCheckinInfo.add(busCheckinInfoDto);
+        }
+        return busCheckinInfo;
+    }
 }
 
 
 
 
-
-//OLD CODE
-//    @Override
-//    public ResponseDto processCheckin(CheckinDto checkinDto) {
-//        Checkin checkin = new Checkin();
-//        Booking booking = bookingRepository.findByTicketNumber(checkinDto.getTicketNumber());
-//
-//        if(booking == null){
-//            throw new RuntimeException("Invalid ticket number");
-//        }
-//        switch (booking.getTicketStatus()) {
-//            case "used" -> throw new RuntimeException("Ticket already used");
-//            case "expired" -> throw new RuntimeException("Ticket already expired");
-//            case "refund" -> throw new RuntimeException("You been refunded on this ticked");
-//        }
-//
-//        Bus bus = busRouteService.getBusRepository().findByBusCode(checkinDto.getBusCode());
-//
-//        if(bus == null) {
-//            throw new RuntimeException("Invalid bus code");
-//        }
-//
-//        if(!bus.getRoute().getId().equals(booking.getRoute().getId())){
-//            throw new RuntimeException("The ticket is not for this route");
-//        }
-////        checkin.setBus(bus);
-//        booking.setTicketStatus("used");
-//        checkin.setBooking(booking);
-//        bookingRepository.save(booking);
-//        checkinRepository.save(checkin);
-//        ResponseDto responseDto = new ResponseDto();
-//        responseDto.setResponse("Checkin successful");
-//        return responseDto;
-//    }
-//}

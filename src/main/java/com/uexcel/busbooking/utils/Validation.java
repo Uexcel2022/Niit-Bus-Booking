@@ -67,5 +67,8 @@ public class Validation {
 
         return !matchedNumbers;
     }
+    public boolean checkAccountNumber(String accountNumber){
+        return !accountNumber.matches("[0-9]{10}");
+    }
 
     }

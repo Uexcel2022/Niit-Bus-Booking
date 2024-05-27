@@ -14,7 +14,7 @@ public class NextOfKinController {
         this.nextOfKinService = nextOfKinService;
     }
 
-    @GetMapping("/api/v1/next-of-kin-user-id/{userId}")
+    @GetMapping("/api/v1/next-of-kin-client-id/{userId}")
     public ResponseEntity<NextOfKin> findNextOfKinByUserId(@PathVariable("userId") String useId){
         return ResponseEntity.ok().body(nextOfKinService.findNextOfKinByUsrId(useId));
     }
