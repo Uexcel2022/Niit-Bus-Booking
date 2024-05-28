@@ -1,14 +1,14 @@
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3360/bus-booking
-    username: root
-    password: jvman19
-  jpa:
-    hibernate:
-      ddl-auto: update
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        TYPE: TRACE
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/rapid_transit
+#    username: root
+#    password: root
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        TYPE: TRACE
