@@ -1,5 +1,7 @@
 package com.uexcel.busbooking.service;
 
+import com.uexcel.busbooking.dto.BusCheckinInfoDto;
+import com.uexcel.busbooking.dto.BusCheckinQueryDto;
 import com.uexcel.busbooking.dto.BusRouteDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
@@ -10,10 +12,12 @@ import com.uexcel.busbooking.repository.RouteRepository;
 import java.util.List;
 
 public interface BusRouteService {
-    public ResponseDto addRout(BusRouteDto busRouteDto);
+    ResponseDto addRout(BusRouteDto busRouteDto);
+
     ResponseDto addBus(BusRouteDto busRouteDto);
-    public RouteRepository getRouteRepository();
-    public BusRepository getBusRepository();
+
+//    RouteRepository getRouteRepository();
+//    BusRepository getBusRepository();
 
     ResponseDto updateBusRoute(String busCode, String routeName);
 
@@ -28,4 +32,14 @@ public interface BusRouteService {
     ResponseDto updateRoute(String routeId, BusRouteDto busRouteDto);
 
     ResponseDto updateBus(String busId, BusRouteDto busRouteDto);
+
+
+
+    public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto bookingQueryDto);
+
+    public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto bookingQueryDto);
+
+    public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto);
+
+    List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto);
 }

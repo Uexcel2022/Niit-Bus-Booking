@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.exception;
 
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,8 @@ import org.springframework.web.context.request.WebRequest;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     ErrorMessage errorMessage;
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> badRequest(CustomException exception, WebRequest request) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleCustomExceptions(CustomException exception, WebRequest request) {
 
         if (exception.getErrorCode().equals("400")) {
             errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
@@ -32,6 +33,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         }
 
+        if (exception.getErrorCode().equals("403")) {
+            errorMessage = new ErrorMessage(HttpStatus.FORBIDDEN, exception.getMessage());
+
+        }
+
         return ResponseEntity.status(errorMessage.getStatus()).body(errorMessage.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handInterServiceException(HttpServerErrorException.InternalServerError exception, WebRequest request) {
+            errorMessage = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+        return ResponseEntity.status(errorMessage.getStatus()).body(errorMessage.getMessage());
+    }
+
 }

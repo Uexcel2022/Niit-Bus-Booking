@@ -1,5 +1,7 @@
 package com.uexcel.busbooking.controller;
 
+import com.uexcel.busbooking.dto.BusCheckinInfoDto;
+import com.uexcel.busbooking.dto.BusCheckinQueryDto;
 import com.uexcel.busbooking.dto.BusRouteDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
@@ -77,4 +79,25 @@ public class BusRouteController {
     public ResponseEntity<ResponseDto> deleteRout(@PathVariable("id") String routeId) {
         return ResponseEntity.status(204).body(null);
     }
+
+    @PostMapping("/api/v1/find-buses-on-route-by-date")
+    public ResponseEntity<List<BusCheckinInfoDto>> findBusesOnRouteByDate(@RequestBody BusCheckinQueryDto busCheckinQueryDto){
+        return ResponseEntity.ok().body(busRouteService.findBusesOnRouteByDate(busCheckinQueryDto));
+    }
+
+    @PostMapping("/api/v1/find-buses-on-route")
+    public ResponseEntity<List<BusCheckinInfoDto>> findBusesOnRoute(@RequestBody BusCheckinQueryDto busCheckinQueryDto){
+        return ResponseEntity.ok().body(busRouteService.findBusesOnRoute(busCheckinQueryDto));
+    }
+
+    @PostMapping("/api/v1/find-bus-routes")
+    public ResponseEntity<List<BusCheckinInfoDto>> findBusRoutes(@RequestBody BusCheckinQueryDto busCheckinQueryDto){
+        return ResponseEntity.ok().body(busRouteService.findBusRoutes(busCheckinQueryDto));
+    }
+
+    @PostMapping("/api/v1/find-bus-routes-day")
+    public ResponseEntity<List<BusCheckinInfoDto>> findBusRoutesByDay(@RequestBody BusCheckinQueryDto busCheckinQueryDto) {
+        return ResponseEntity.ok().body(busRouteService.findBusRoutesByDay(busCheckinQueryDto));
+    }
+
 }

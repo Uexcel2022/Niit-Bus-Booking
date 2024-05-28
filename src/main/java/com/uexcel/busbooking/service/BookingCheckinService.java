@@ -12,11 +12,16 @@ public interface BookingCheckinService {
 
     ResponseDto processCheckin(CheckinDto checkinDto);
 
-    public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto bookingQueryDto);
+//    public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto bookingQueryDto);
+//
+//    public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto bookingQueryDto);
+//
+//    public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto);
+//
+//    List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto);
 
-    public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto bookingQueryDto);
+    public List<BookingInfoDto> findBookingByClientId(String clientId);
 
-    public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto);
+    List<BookingInfoDto> findByClientIdAndTicketStatus(String clientId, String status);
 
-    List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto);
 }
