@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class BookingCheckinController {
     private final BookingCheckinService bookingCheckinService;
     public BookingCheckinController(BookingCheckinService bookingCheckinService){
