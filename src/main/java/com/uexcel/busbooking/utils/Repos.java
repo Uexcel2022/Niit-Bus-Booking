@@ -3,7 +3,6 @@ package com.uexcel.busbooking.utils;
 import com.uexcel.busbooking.repository.*;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 @Getter
@@ -25,5 +24,7 @@ public class Repos {
     private BusRepository busRepository;
     @Autowired
     private ClientWalletRepository clientWalletRepository;
+    @Autowired
+    private BankCodeRepository bankCodeRepository;
 
 }

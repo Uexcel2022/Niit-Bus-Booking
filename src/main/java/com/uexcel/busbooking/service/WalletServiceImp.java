@@ -6,42 +6,27 @@ import com.uexcel.busbooking.dto.WalletTransactionInfoDto;
 import com.uexcel.busbooking.entity.ClientWallet;
 import com.uexcel.busbooking.entity.WalletTransaction;
 import com.uexcel.busbooking.exception.CustomException;
-import com.uexcel.busbooking.repository.ClientWalletRepository;
-import com.uexcel.busbooking.repository.WallTransactionRepository;
+import com.uexcel.busbooking.utils.Repos;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class WalletServiceImp implements WalletService {
-    private final ClientWalletRepository clientWalletRepository;
-    private final WallTransactionRepository wallTransactionRepository;
+    private final Repos repos;
+    public WalletServiceImp(Repos repos) {
 
-    public WalletServiceImp(ClientWalletRepository clientWalletRepository,
-                            WallTransactionRepository wallTransactionRepository
-
-    ) {
-        this.clientWalletRepository = clientWalletRepository;
-        this.wallTransactionRepository = wallTransactionRepository;
+        this.repos = repos;
     }
-
-    @Override
-    public ClientWalletRepository getClientWalletRepository() {
-        return clientWalletRepository;
-    }
-
-    @Override
-    public WallTransactionRepository getWallTransactionRepository() {
-        return wallTransactionRepository;
-    }
-
 
     //Tested ok
     @Override
+    @Transactional
     public ResponseDto processWalletFunding(WalletFundingDto walletFundingDto) {
 
-        ClientWallet clientWallet = clientWalletRepository
+        ClientWallet clientWallet = repos.getClientWalletRepository()
                 .findByWalletNumber(walletFundingDto.getWalletNumber());
 
         if (clientWallet==null) {
@@ -60,8 +45,8 @@ public class WalletServiceImp implements WalletService {
         walletTransaction.setBank(walletFundingDto.getBank());
         clientWallet.setBalance(newBalance);
         walletTransaction.setWallet(clientWallet);
-        clientWalletRepository.save(clientWallet);
-        wallTransactionRepository.save(walletTransaction);
+        repos.getClientWalletRepository().save(clientWallet);
+        repos.getWallTransactionRepository().save(walletTransaction);
         ResponseDto responseDto = new ResponseDto();
         responseDto.setResponse("Transaction successful");
         return responseDto;
@@ -70,8 +55,9 @@ public class WalletServiceImp implements WalletService {
 
     //Tested ok
     @Override
+    @Transactional
     public ClientWallet findWalletByWalletNumber(String walletNumber) {
-        ClientWallet clientWallet = clientWalletRepository.findByWalletNumber(walletNumber);
+        ClientWallet clientWallet = repos.getClientWalletRepository().findByWalletNumber(walletNumber);
         if (clientWallet == null) {
             throw new CustomException("Wallet not found", "404");
         }
@@ -81,22 +67,32 @@ public class WalletServiceImp implements WalletService {
     //Tested ok
     @Override
     public List<WalletTransactionInfoDto> findWalletTransByWalletNumber(String walletNumber) {
-        ClientWallet clientWallet = clientWalletRepository.findByWalletNumber(walletNumber);
+        ClientWallet clientWallet = repos.getClientWalletRepository().findByWalletNumber(walletNumber);
         if (clientWallet == null) {
             throw new CustomException("Wallet not found", "404");
         }
-        List<WalletTransaction> walletTransactions = wallTransactionRepository.findByWalletNumber(walletNumber);
+        List<WalletTransaction> walletTransactions = repos.getWallTransactionRepository().findByWalletNumber(walletNumber);
+        return checkResult(walletTransactions);
+    }
+
+    @Override
+    public List<WalletTransactionInfoDto> findClientWallet() {
+        List<WalletTransaction> walletTransactions = repos.getWallTransactionRepository().findAll();
+        return checkResult(walletTransactions);
+
+    }
+
+
+
+    private List<WalletTransactionInfoDto> checkResult(List<WalletTransaction> walletTransactions) {
         if (walletTransactions.isEmpty()) {
             throw new CustomException("Not found wallet transaction", "404");
         }
-
         List<WalletTransactionInfoDto> walletTransactionInfoDtos = new ArrayList<>();
-
         for (WalletTransaction walletTransaction : walletTransactions) {
             WalletTransactionInfoDto walletTransactionInfoDto = getWalletTransactionInfoDto(walletTransaction);
             walletTransactionInfoDtos.add(walletTransactionInfoDto);
         }
-
 
         return walletTransactionInfoDtos;
     }
@@ -114,8 +110,7 @@ public class WalletServiceImp implements WalletService {
         walletTransactionInfoDto.setAmount(walletTransaction.getAmount());
         walletTransactionInfoDto.setPayer(walletTransaction.getFullName());
         walletTransactionInfoDto.setClientName(
-                walletTransaction.getWallet().getClient()
-                        .getFirstName()+ " "+ walletTransaction.getWallet().getClient().getLastName());
+                walletTransaction.getWallet().getClient().getFullName());
         return walletTransactionInfoDto;
     }
 

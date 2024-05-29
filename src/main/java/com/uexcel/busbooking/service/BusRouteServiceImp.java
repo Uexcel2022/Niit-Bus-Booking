@@ -10,11 +10,8 @@ import com.uexcel.busbooking.utils.Validation;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.entity.Route;
-import com.uexcel.busbooking.repository.BusRepository;
 import com.uexcel.busbooking.repository.RouteRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,29 +20,16 @@ import java.util.Optional;
 @Service
 
 public class BusRouteServiceImp implements BusRouteService{
-//    private final RouteRepository routeRepository;
-//    private final BusRepository busRepository;
+
     private final Validation validation;
     private final Repos repos;
 
-    public BusRouteServiceImp(RouteRepository routeRepository,
-//                              BusRepository busRepository,
-                              Validation validation, Repos repos) {
-//        this.routeRepository = routeRepository;
-//        this.busRepository = busRepository;
+    public BusRouteServiceImp(Validation validation, Repos repos) {
+
         this.validation = validation;
         this.repos = repos;
     }
 
-//    @Override
-//    public RouteRepository getRouteRepository() {
-//        return routeRepository;
-//    }
-
-//    @Override
-//    public BusRepository getBusRepository() {
-//        return busRepository;
-//    }
 
     @Override
     public ResponseDto updateBusRoute(String busCode, String routeName) {
@@ -168,7 +152,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCurrentRouteId(
                 busCheckinQueryDto.getBusCurrentRouteId());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Route not found.","404");
         }
 
@@ -178,7 +162,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCurrentRouteIdAndCheckinDate(
                 busCheckinQueryDto.getBusCurrentRouteId(), busCheckinQueryDto.getDate());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Not found.","404");
         }
         return filterResultSet(checkin);
@@ -186,7 +170,7 @@ public class BusRouteServiceImp implements BusRouteService{
 
     public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCode(busCheckinQueryDto.getBusCode());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Not found.","404");
         }
         return filterResultSet(checkin);
@@ -196,7 +180,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCodeAndCheckinDate(
                 busCheckinQueryDto.getBusCode(),busCheckinQueryDto.getDate());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Not found.","404");
         }
         return filterResultSet(checkin);

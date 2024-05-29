@@ -10,9 +10,9 @@ public class NextOfKin {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(nullable = false)
-    private String nFirstName;
-    @Column(nullable = false)
-    private String nLastName;
+    private String nFullName;
+//    @Column(nullable = false)
+//    private String nGender;
     @Column(nullable = false)
     private String address;
     @Column(nullable = false)
@@ -21,6 +21,7 @@ public class NextOfKin {
     private String state;
     @Column(nullable = false)
     private String nPhoneNumber;
+    private String status;
 
     @OneToOne(optional = false,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Client client;
