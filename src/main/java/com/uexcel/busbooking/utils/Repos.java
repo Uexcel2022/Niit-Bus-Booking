@@ -25,6 +25,6 @@ public class Repos {
     @Autowired
     private ClientWalletRepository clientWalletRepository;
     @Autowired
-    private BankCodeRespository bankCodeRespository;
+    private BankCodeRepository bankCodeRepository;
 
 }

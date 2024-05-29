@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BankCodeRespository extends JpaRepository<BankCode, String> {
+public interface BankCodeRepository extends JpaRepository<BankCode, String> {
+
+    BankCode findByBankCodeOrBankName(String bankCode, String bankName);
 }

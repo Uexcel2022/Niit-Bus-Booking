@@ -47,7 +47,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NullPointerException: " + exception.getMessage());
         }
         if (exception instanceof DataIntegrityViolationException) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sorry we encountered error while storing the data!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry we encountered error while storing the data!");
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sorry we encountered an error: " + exception.getMessage());
     }

@@ -30,15 +30,6 @@ public class BusRouteServiceImp implements BusRouteService{
         this.repos = repos;
     }
 
-//    @Override
-//    public RouteRepository getRouteRepository() {
-//        return routeRepository;
-//    }
-
-//    @Override
-//    public BusRepository getBusRepository() {
-//        return busRepository;
-//    }
 
     @Override
     public ResponseDto updateBusRoute(String busCode, String routeName) {
