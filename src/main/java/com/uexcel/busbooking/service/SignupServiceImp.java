@@ -6,54 +6,56 @@ import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.ClientWallet;
 import com.uexcel.busbooking.exception.CustomException;
+import com.uexcel.busbooking.utils.Repos;
 import com.uexcel.busbooking.utils.Validation;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
 @Service
 public class SignupServiceImp implements SignupService{
-    private final ClientService clientService;
-    private final WalletService walletService;
-    private final NextOfKinService nextOfKinService;
+    private final Repos repos;
     private final Validation validation;
-      public SignupServiceImp(ClientService clientService,
-                              WalletService walletService,
-                              NextOfKinService nextOfKinService, Validation validation){
-          this.clientService = clientService;
-          this.walletService = walletService;
-          this.nextOfKinService = nextOfKinService;
+      public SignupServiceImp(Validation validation, Repos repos){
           this.validation = validation;
+          this.repos = repos;
       }
 
+      @Transactional
     public ResponseDto processSignup(SignupDto signupDto) {
 
-          if(clientService.getClientRepository()
+          if(repos.getClientRepository()
                   .findByEmail(signupDto.getEmail()) != null){
               throw new CustomException("The email is in use.","400");
           }
 
-        if(clientService.getClientRepository()
+        if(repos.getClientRepository()
                 .findByPhoneNumber(signupDto.getPhoneNumber()) != null){
             throw new CustomException("The phone number is in use.","400");
         }
+
+//        if(repos.getClientWalletRepository()
+//                .findByWalletNumber(signupDto.getWalletNumber()) != null){
+//            throw new CustomException("Wallet number is in use.","400");
+//        }
 
         Client client = new Client();
         NextOfKin nextOfKin = new NextOfKin();
         ClientWallet clientWallet = new ClientWallet();
 
-        if(validation.checkName(signupDto.getFirstName())){
+        if(validation.checkName(signupDto.getFullName())){
             throw new CustomException("First name is not valid.","400");
         }
-        if(validation.checkName(signupDto.getNFirstName())){
+        if(validation.checkName(signupDto.getNFullName())){
             throw new CustomException("Next of kin first name is not valid.","400");
         }
-        if(validation.checkName(signupDto.getLastName())){
-            throw new CustomException("Last name is not valid.","400");
-        }
-        if(validation.checkName(signupDto.getNLastName())){
-            throw new CustomException("Next of kin last name is not valid.","400");
-        }
+//        if(validation.checkNullBlank(signupDto.getGender())){
+//            throw new CustomException("Client gender field can not be empty.","400");
+//        }
+//        if(validation.checkNullBlank(signupDto.getNGender())){
+//            throw new CustomException("Next of kin gender field can not be empty.","400");
+//        }
         if(validation.checkEmail(signupDto.getEmail())){
             throw new CustomException("Email is not valid.","400");
         }
@@ -97,15 +99,15 @@ public class SignupServiceImp implements SignupService{
         }
 
 
-        client.setFirstName(signupDto.getFirstName());
-        client.setLastName(signupDto.getLastName());
+        client.setFullName(signupDto.getFullName());
+//        client.setGender(signupDto.getGender());
         client.setBirthDate(LocalDate.parse(signupDto.getBirthDate()));
         client.setEmail(signupDto.getEmail());
         client.setPassword(signupDto.getPassword());
         client.setPhoneNumber(signupDto.getPhoneNumber());
 
-        nextOfKin.setNFirstName(signupDto.getNFirstName());
-        nextOfKin.setNLastName(signupDto.getNLastName());
+        nextOfKin.setNFullName(signupDto.getNFullName());
+//        nextOfKin.setNGender(signupDto.getNGender());
         nextOfKin.setAddress(signupDto.getAddress());
         nextOfKin.setLga(signupDto.getLga());
         nextOfKin.setState(signupDto.getState());
@@ -115,11 +117,11 @@ public class SignupServiceImp implements SignupService{
         clientWallet.setStatus("active");
         clientWallet.setWalletNumber(signupDto.getWalletNumber());
 
-        clientService.getClientRepository().save(client);
+        repos.getClientRepository().save(client);
         nextOfKin.setClient(client);
         clientWallet.setClient(client);
-        walletService.getClientWalletRepository().save(clientWallet);
-        nextOfKinService.getNextOfKinRepository().save(nextOfKin);
+        repos.getClientWalletRepository().save(clientWallet);
+        repos.getNextOfKinRepository().save(nextOfKin);
         ResponseDto responseDto = new ResponseDto();
          responseDto.setResponse("You have successfully registered!");
         return responseDto;

@@ -10,7 +10,7 @@ public class Validation {
 
     public boolean checkName(String name){
 
-        return !name.matches("[a-zA-Z]{2,}");
+        return !name.matches("[a-zA-Z]{2,}\s[A-Za-z]{2,}\s?[A-Za-z]*");
     }
 
     public static boolean checkDaDate(String date){

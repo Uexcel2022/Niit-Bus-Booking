@@ -8,7 +8,6 @@ import com.uexcel.busbooking.repository.ClientRepository;
 import java.util.List;
 
 public interface ClientService {
-    ClientRepository getClientRepository();
 
     Client findByClientByEmail(ClientEmailPasswordDto clientEmailPasswordDto);
 

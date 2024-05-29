@@ -168,7 +168,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCurrentRouteId(
                 busCheckinQueryDto.getBusCurrentRouteId());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Route not found.","404");
         }
 
@@ -178,7 +178,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCurrentRouteIdAndCheckinDate(
                 busCheckinQueryDto.getBusCurrentRouteId(), busCheckinQueryDto.getDate());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Not found.","404");
         }
         return filterResultSet(checkin);
@@ -186,7 +186,7 @@ public class BusRouteServiceImp implements BusRouteService{
 
     public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCode(busCheckinQueryDto.getBusCode());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Not found.","404");
         }
         return filterResultSet(checkin);
@@ -196,7 +196,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCodeAndCheckinDate(
                 busCheckinQueryDto.getBusCode(),busCheckinQueryDto.getDate());
-        if(checkin == null){
+        if(checkin.isEmpty()){
             throw new CustomException("Not found.","404");
         }
         return filterResultSet(checkin);

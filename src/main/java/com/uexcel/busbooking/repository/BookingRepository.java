@@ -19,4 +19,7 @@ public interface BookingRepository extends CrudRepository<Booking, String> {
 
     @Query(value ="SELECT p FROM Booking p WHERE p.client.id=:clientId AND p.ticketStatus=:status")
     List<Booking> findByClientIdAndTicketStatus(String clientId, String status);
+
+    @Query(value = "SELECT p FROM Booking p WHERE p.ticketStatus=:status AND p.route.id=:routeId")
+    List<Booking> findByTicketStatusAndRoutName(String status, String routeId);
 }

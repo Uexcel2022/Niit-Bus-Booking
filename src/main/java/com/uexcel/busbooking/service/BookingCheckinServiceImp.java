@@ -3,9 +3,9 @@ package com.uexcel.busbooking.service;
 import com.uexcel.busbooking.dto.*;
 import com.uexcel.busbooking.entity.*;
 import com.uexcel.busbooking.exception.CustomException;
-import com.uexcel.busbooking.repository.*;
 import com.uexcel.busbooking.utils.Repos;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,29 +14,13 @@ import java.util.Optional;
 
 @Service
 public class BookingCheckinServiceImp implements BookingCheckinService {
-//    private final BusRouteService busRouteService;
-//    private final BookingRepository bookingRepository;
-//    private final ClientService clientService;
-//    private final CheckinRepository checkinRepository;
-//    private  final WalletService walletService;
     private final Repos repos;
-    public BookingCheckinServiceImp(
-//            BusRouteService busRouteService,
-//                                    BookingRepository bookingRepository, ClientService clientService,
-//                                    CheckinRepository checkinRepository, WalletService walletService,
-
-                                    Repos repos
-    ) {
-//        this.busRouteService = busRouteService;
-//        this.bookingRepository = bookingRepository;
-//        this.clientService = clientService;
-//        this.checkinRepository = checkinRepository;
-//        this.walletService = walletService;
+    public BookingCheckinServiceImp(Repos repos) {
         this.repos = repos;
     }
 
-
     @Override
+    @Transactional
     public BookingInfoDto processBooking(String clientId, String routeId) {
 
         Booking bk = repos.getBookingRepository().findByClientId(clientId,routeId);
@@ -83,15 +67,15 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         walletTransaction.setAccountNumber(wallet.getWalletNumber());
         walletTransaction.setAmount(-r.getPrice());
         walletTransaction.setWallet(wallet);
-        walletTransaction.setFullName(u.getFirstName() + " " + u.getLastName());
+        walletTransaction.setFullName(u.getFullName());
         walletTransaction.setTransactionDate(LocalDate.now());
         repos.getWallTransactionRepository().save(walletTransaction);
 
 
         booking.setTicketStatus("valid");
 
-        bookingInfoDto.setFName(u.getFirstName());
-        bookingInfoDto.setLName(u.getLastName());
+        bookingInfoDto.setFullName(u.getFullName());
+//        bookingInfoDto.setGender(u.getGender());
         bookingInfoDto.setTickNumber(booking.getTicketNumber());
         bookingInfoDto.setRouteName(r.getRouteName());
         bookingInfoDto.setAmount(r.getPrice());
@@ -104,6 +88,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
     }
 
     @Override
+    @Transactional
     public ResponseDto processCheckin(CheckinDto checkinDto) {
         Checkin checkin = new Checkin();
         Booking booking = repos.getBookingRepository().findByTicketNumber(checkinDto.getTicketNumber());
@@ -142,84 +127,61 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
     public List<BookingInfoDto> findBookingByClientId(String clientId){
         List<Booking> booking = repos.getBookingRepository().findByClientId(clientId);
 
-        if(booking!=null){
+        if(!booking.isEmpty()){
             return getBookingInfo(booking);
-        }else throw new CustomException("Booking not found","404");
+        }else throw new CustomException("No booking found","404");
     }
 
-
+    @Override
     public List<BookingInfoDto> findByClientIdAndTicketStatus(String clientId, String status){
         List<Booking> booking = repos.getBookingRepository().findByClientIdAndTicketStatus(clientId,status);
 
-        if(booking!=null){
+        if(!booking.isEmpty()){
             return getBookingInfo(booking);
-        }else throw new CustomException("Booking not found","404");
+        }else throw new CustomException("No valid ticket booking found","404");
     }
 
+    @Override
+    public List<BookingInfoDto> findAllTicketByStatusAndRouteName(SearchingTicketDto searchingTicketDto){
+        Route route = repos.getRouteRepository().findByRouteName(searchingTicketDto.getRouteName());
+        if(route == null){
+            throw new CustomException("Route not found.","404");
+        }
 
-//    public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
-//        List<Checkin> checkin = checkinRepository.findByBusCurrentRouteId(
-//                busCheckinQueryDto.getBusCurrentRouteId());
-//        if(checkin == null){
-//            throw new CustomException("Route not found.","404");
-//        }
-//
-//        return filterResultSet(checkin);
-//    }
-//
-//    public List<BusCheckinInfoDto> findBusesOnRouteByDate(BusCheckinQueryDto busCheckinQueryDto) {
-//        List<Checkin> checkin = checkinRepository.findByBusCurrentRouteIdAndCheckinDate(
-//                busCheckinQueryDto.getBusCurrentRouteId(), busCheckinQueryDto.getDate());
-//        if(checkin == null){
-//            throw new CustomException("Not found.","404");
-//        }
-//        return filterResultSet(checkin);
-//    }
-//
-//    public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
-//        List<Checkin> checkin = checkinRepository.findByBusCode(busCheckinQueryDto.getBusCode());
-//        if(checkin == null){
-//            throw new CustomException("Not found.","404");
-//        }
-//        return filterResultSet(checkin);
-//    }
-//
-//    @Override
-//    public List<BusCheckinInfoDto> findBusRoutesByDay(BusCheckinQueryDto busCheckinQueryDto) {
-//        List<Checkin> checkin = checkinRepository.findByBusCodeAndCheckinDate(
-//                 busCheckinQueryDto.getBusCode(),busCheckinQueryDto.getDate());
-//        if(checkin == null){
-//            throw new CustomException("Not found.","404");
-//        }
-//        return filterResultSet(checkin);
-//    }
-//
-//
-//    public  void findBooking(LocalDate date1, LocalDate date2){
-//    }
-//
-//
-//
-//    private static   List<BusCheckinInfoDto> filterResultSet(List<Checkin> checkin){
-//        List<BusCheckinInfoDto> busCheckinInfo = new ArrayList<>();
-//        for(Checkin checkin1 : checkin){
-//            BusCheckinInfoDto busCheckinInfoDto = new BusCheckinInfoDto();
-//            busCheckinInfoDto.setBookingId(checkin1.getBooking().getId());
-//            busCheckinInfoDto.setBusCode(checkin1.getBusCode());
-//            busCheckinInfoDto.setRouteName(checkin1.getBooking().getRoute().getRouteName());
-//            busCheckinInfoDto.setCheckinDate(checkin1.getCheckinDate());
-//            busCheckinInfo.add(busCheckinInfoDto);
-//        }
-//        return busCheckinInfo;
-//    }
+        List<Booking> booking = repos.getBookingRepository().findByTicketStatusAndRoutName(searchingTicketDto.getStatus(),route.getId());
+
+        if(!booking.isEmpty()){
+            return getBookingInfo(booking);
+        }else throw new CustomException("No valid ticket booking found.","404");
+    }
+
+    @Override
+    public List<BookingInfoDto> findAllTicketByStatusAndRouteNameAndPhone(SearchingTicketDto searchingTicketDto){
+        Route route = repos.getRouteRepository().findByRouteName(searchingTicketDto.getRouteName());
+        if(route == null){
+            throw new CustomException("Route not found.","404");
+        }
+
+        List<Booking> booking = repos.getBookingRepository().findByTicketStatusAndRoutName(searchingTicketDto.getStatus(),route.getId());
+        List<Booking> returnB = new ArrayList<>();
+        if(!booking.isEmpty()){
+            for(Booking b : booking){
+                if(b.getClient().getPhoneNumber().equals(searchingTicketDto.getPhone())){
+                    returnB.add(b);
+                    return getBookingInfo(returnB);
+                }
+            }
+        }
+        throw new CustomException("No "+ searchingTicketDto.getStatus() +" ticket found.","404");
+    }
 
 
     public static  List<BookingInfoDto> getBookingInfo(List<Booking> bookingList){
         List<BookingInfoDto> bookingInfo = new ArrayList<>();
         for(Booking clientObj : bookingList){
             BookingInfoDto bookingInfoDto = new BookingInfoDto();
-            bookingInfoDto.setFName(clientObj.getClient().getFirstName());
-            bookingInfoDto.setLName(clientObj.getClient().getLastName());
+            bookingInfoDto.setFullName(clientObj.getClient().getFullName());
+//            bookingInfoDto.setGender(clientObj.getClient().getGender());
             bookingInfoDto.setTickNumber(clientObj.getTicketNumber());
             bookingInfoDto.setRouteName(clientObj.getRoute().getRouteName());
             bookingInfoDto.setAmount(clientObj.getRoute().getPrice());

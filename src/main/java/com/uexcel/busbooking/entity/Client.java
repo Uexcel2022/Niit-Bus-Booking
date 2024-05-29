@@ -12,9 +12,9 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(nullable = false)
-    private String firstName;
-    @Column(nullable = false)
-    private String lastName;
+    private String fullName;
+//    @Column(nullable = false)
+//    private String gender;
     @Column(nullable = false)
     private LocalDate birthDate;
     @Column(unique=true, nullable = false)
@@ -23,5 +23,6 @@ public class Client {
     private String phoneNumber;
     @Column(nullable = false)
     private String password;
+    private String status;
 
 }

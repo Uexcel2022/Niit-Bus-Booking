@@ -1,6 +1,6 @@
 package com.uexcel.busbooking.exception;
 
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import org.springframework.http.HttpStatus;
@@ -42,9 +42,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handInterServiceException(HttpServerErrorException.InternalServerError exception, WebRequest request) {
-            errorMessage = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
-        return ResponseEntity.status(errorMessage.getStatus()).body(errorMessage.getMessage());
+    public ResponseEntity<String> handleExceptions(Exception exception, WebRequest request ) {
+        if (exception instanceof NullPointerException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NullPointerException: " + exception.getMessage());
+        }
+        if (exception instanceof DataIntegrityViolationException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sorry we encountered error while storing the data!");
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sorry we encountered an error: " + exception.getMessage());
     }
 
 }

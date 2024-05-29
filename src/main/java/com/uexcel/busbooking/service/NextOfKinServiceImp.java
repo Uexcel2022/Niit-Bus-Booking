@@ -45,13 +45,13 @@ public class NextOfKinServiceImp implements NextOfKinService {
         if (nextOfKinOptional.isPresent()) {
             NextOfKin toUpdateNextOfKin = nextOfKinOptional.get();
 
-            if(!validation.checkName(updatedNextOfKin.getNFirstName())) {
-                toUpdateNextOfKin.setNFirstName(updatedNextOfKin.getNFirstName());
+            if(!validation.checkName(updatedNextOfKin.getNFullName())) {
+                toUpdateNextOfKin.setNFullName(updatedNextOfKin.getNFullName());
             } else { throw new CustomException("First Name is invalid.","400"); }
 
-            if(!validation.checkName(updatedNextOfKin.getNLastName())) {
-                toUpdateNextOfKin.setNLastName(updatedNextOfKin.getNLastName());
-            }else { throw new CustomException("Last name is invalid.","400"); }
+//            if(!validation.checkNullBlank(updatedNextOfKin.getNGender())) {
+//                toUpdateNextOfKin.setNGender(updatedNextOfKin.getNGender());
+//            }else { throw new CustomException("Last name is invalid.","400"); }
 
             if(!validation.checkNullBlank(updatedNextOfKin.getAddress())) {
                 toUpdateNextOfKin.setAddress(updatedNextOfKin.getAddress());

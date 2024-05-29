@@ -10,7 +10,6 @@ import com.uexcel.busbooking.repository.WallTransactionRepository;
 import java.util.List;
 
 public interface WalletService {
-    ClientWalletRepository getClientWalletRepository();
 
     ResponseDto processWalletFunding(WalletFundingDto walletFundingDto);
 
@@ -18,6 +17,6 @@ public interface WalletService {
 
     List<WalletTransactionInfoDto> findWalletTransByWalletNumber(String id);
 
-    WallTransactionRepository getWallTransactionRepository();
+
 
 }
