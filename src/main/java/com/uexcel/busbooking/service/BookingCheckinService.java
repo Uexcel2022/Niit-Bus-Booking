@@ -10,12 +10,12 @@ public interface BookingCheckinService {
 
     ResponseDto processCheckin(CheckinDto checkinDto);
 
-    public List<BookingInfoDto> findBookingByClientId(String clientId);
+    List<BookingInfoDto> findBookingByClientId(String clientId);
 
     List<BookingInfoDto> findByClientIdAndTicketStatus(String clientId, String status);
 
     List<BookingInfoDto> findAllTicketByStatusAndRouteName(SearchingTicketDto searchingTicketDto);
 
-    public List<BookingInfoDto> findAllTicketByStatusAndRouteNameAndPhone(SearchingTicketDto searchingTicketDto);
+    List<BookingInfoDto> findAllTicketByStatusAndRouteNameAndPhone(SearchingTicketDto searchingTicketDto);
 
 }

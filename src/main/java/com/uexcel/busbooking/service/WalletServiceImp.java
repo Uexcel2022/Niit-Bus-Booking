@@ -6,8 +6,6 @@ import com.uexcel.busbooking.dto.WalletTransactionInfoDto;
 import com.uexcel.busbooking.entity.ClientWallet;
 import com.uexcel.busbooking.entity.WalletTransaction;
 import com.uexcel.busbooking.exception.CustomException;
-import com.uexcel.busbooking.repository.ClientWalletRepository;
-import com.uexcel.busbooking.repository.WallTransactionRepository;
 import com.uexcel.busbooking.utils.Repos;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

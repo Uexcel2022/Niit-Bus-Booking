@@ -10,11 +10,8 @@ import com.uexcel.busbooking.utils.Validation;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.entity.Route;
-import com.uexcel.busbooking.repository.BusRepository;
 import com.uexcel.busbooking.repository.RouteRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,16 +20,12 @@ import java.util.Optional;
 @Service
 
 public class BusRouteServiceImp implements BusRouteService{
-//    private final RouteRepository routeRepository;
-//    private final BusRepository busRepository;
+
     private final Validation validation;
     private final Repos repos;
 
-    public BusRouteServiceImp(RouteRepository routeRepository,
-//                              BusRepository busRepository,
-                              Validation validation, Repos repos) {
-//        this.routeRepository = routeRepository;
-//        this.busRepository = busRepository;
+    public BusRouteServiceImp(Validation validation, Repos repos) {
+
         this.validation = validation;
         this.repos = repos;
     }
