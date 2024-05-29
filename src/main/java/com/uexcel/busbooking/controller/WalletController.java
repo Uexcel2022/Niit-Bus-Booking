@@ -25,15 +25,21 @@ public class WalletController {
         return ResponseEntity.ok().body(walletService.processWalletFunding(walletFundingDto));
     }
 
-    @GetMapping("/api/v1/client-wallet/{userId}")
-    public ResponseEntity<ClientWallet> findWalletUserById(@PathVariable String userId){
-        return ResponseEntity.ok().body(walletService.findWalletByWalletNumber(userId));
+    @GetMapping("/api/v1/client-wallet/{clientId}")
+    public ResponseEntity<ClientWallet> findWalletUserById(@PathVariable String clientId){
+        return ResponseEntity.ok().body(walletService.findWalletByWalletNumber(clientId));
 
     }
 
     @GetMapping("/api/v1/client-wallet-trans/{walletId}")
     public ResponseEntity<List<WalletTransactionInfoDto>> findWalletTransactionByCode(@PathVariable String walletId){
        return ResponseEntity.ok().body(walletService.findWalletTransByWalletNumber(walletId));
+
+    }
+
+    @GetMapping("/api/v1/client-wallet")
+    public ResponseEntity<List<WalletTransactionInfoDto>> findWalletTransactionByCode(){
+        return ResponseEntity.ok().body(walletService.findClientWallet());
 
     }
 

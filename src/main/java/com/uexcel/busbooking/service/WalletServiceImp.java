@@ -72,12 +72,23 @@ public class WalletServiceImp implements WalletService {
             throw new CustomException("Wallet not found", "404");
         }
         List<WalletTransaction> walletTransactions = repos.getWallTransactionRepository().findByWalletNumber(walletNumber);
+        return checkResult(walletTransactions);
+    }
+
+    @Override
+    public List<WalletTransactionInfoDto> findClientWallet() {
+        List<WalletTransaction> walletTransactions = repos.getWallTransactionRepository().findAll();
+        return checkResult(walletTransactions);
+
+    }
+
+
+
+    private List<WalletTransactionInfoDto> checkResult(List<WalletTransaction> walletTransactions) {
         if (walletTransactions.isEmpty()) {
             throw new CustomException("Not found wallet transaction", "404");
         }
-
         List<WalletTransactionInfoDto> walletTransactionInfoDtos = new ArrayList<>();
-
         for (WalletTransaction walletTransaction : walletTransactions) {
             WalletTransactionInfoDto walletTransactionInfoDto = getWalletTransactionInfoDto(walletTransaction);
             walletTransactionInfoDtos.add(walletTransactionInfoDto);
