@@ -24,7 +24,8 @@ public class TokenInterceptor implements HandlerInterceptor {
             log.info("authHeader: " + utils.decode(authHeader));
             return true;
         }
-        response.sendError(HttpServletResponse.SC_FORBIDDEN,"Invalid token");
-        return false;
+//        response.sendError(HttpServletResponse.SC_FORBIDDEN,"Invalid token");
+//        return false;
+        throw new CustomException("Invalid token", "401");
     }
 }

@@ -1,7 +1,7 @@
 package com.uexcel.busbooking.utils;
 
 import com.uexcel.busbooking.dto.LoginDto;
-import com.uexcel.busbooking.errors.BadRequestException;
+import com.uexcel.busbooking.exception.CustomException;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +13,7 @@ public class UtilsToken {
     public void checkPhoneNumber(String phone) {
         boolean valid = Pattern.matches("(\\+?234|0)[7-9][01]\\d{8}", phone);
         if (!valid) {
-            throw new BadRequestException("Invalid nigerian phone number");
+            throw new CustomException("Invalid nigerian phone number");
         }
     }
     public boolean validateEmail(String email) {
