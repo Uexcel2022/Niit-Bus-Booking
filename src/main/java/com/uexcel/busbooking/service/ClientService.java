@@ -3,6 +3,7 @@ package com.uexcel.busbooking.service;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Client;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface ClientService {
     Client updateClient(String id, Client client);
 
     ResponseDto login(ClientEmailPasswordDto clientEmailPasswordDto);
+    ResponseEntity<String> verifyEmail(String email);
 }

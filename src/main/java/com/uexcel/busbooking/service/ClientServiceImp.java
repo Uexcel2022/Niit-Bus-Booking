@@ -6,6 +6,9 @@ import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Repos;
 import com.uexcel.busbooking.utils.Validation;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +20,12 @@ public class ClientServiceImp implements ClientService {
 //    private final ClientRepository clientRepository;
     private final Validation validation;
     private final Repos repos;
+    private final EmailService emailService;
 
-    public ClientServiceImp( Validation validation, Repos repos) {
-
+    public ClientServiceImp( Validation validation, Repos repos, EmailService emailService) {
         this.validation = validation;
         this.repos = repos;
+        this.emailService = emailService;
     }
 
 
@@ -104,6 +108,13 @@ public class ClientServiceImp implements ClientService {
         }
 
         return new ResponseDto("You have log in successful!!!");
+    }
+
+    @Override
+//    @EventListener(ApplicationReadyEvent.class)
+    public ResponseEntity<String> verifyEmail(String email) {
+        emailService.verifyEmail(email);
+        return ResponseEntity.ok().body("Email sent successfully");
     }
 
 
