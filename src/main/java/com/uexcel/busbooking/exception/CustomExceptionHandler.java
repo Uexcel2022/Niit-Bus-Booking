@@ -21,7 +21,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (exception.getErrorCode().equals("400")) {
             errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
 
+        if (exception.getErrorCode().equals("401")) {
+            errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED, exception.getMessage());
         }
 
         if (exception.getErrorCode().equals("404")) {
