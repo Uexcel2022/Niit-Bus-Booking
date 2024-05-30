@@ -1,6 +1,6 @@
 package com.uexcel.busbooking.service;
 
-import com.uexcel.busbooking.dto.ClientDetaislDto;
+import com.uexcel.busbooking.dto.ClientDetailsDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.entity.ClientWallet;
@@ -33,7 +33,7 @@ public class ClientServiceImp implements ClientService {
 
     @Transactional
     @Override
-    public  ClientDetaislDto getClientDetailsById(String clientId){
+    public ClientDetailsDto getClientDetailsById(String clientId){
 
             Client checkingById = repos.getClientRepository().findByIdAndStatus(clientId, activeStatus);
 
@@ -205,20 +205,20 @@ public class ClientServiceImp implements ClientService {
         } else throw new CustomException("Client not found",statusCode404);
     }
 
-    private static ClientDetaislDto setClientDetails(
+    private static ClientDetailsDto setClientDetails(
             Client client,ClientWallet clientWallet,NextOfKin nextOfKin){
 
-        ClientDetaislDto clientDetaislDto = new ClientDetaislDto();
-        clientDetaislDto.setId(client.getId());
-        clientDetaislDto.setFullName(client.getFullName());
-        clientDetaislDto.setPhoneNumber(client.getPhoneNumber());
-        clientDetaislDto.setEmail(client.getEmail());
-        clientDetaislDto.setWalletNumber(clientWallet.getWalletNumber());
-        clientDetaislDto.setBalance(clientWallet.getBalance());
-        clientDetaislDto.setNextKinName(nextOfKin.getNFullName());
-        clientDetaislDto.setNextKinPhone(nextOfKin.getNPhoneNumber());
-        clientDetaislDto.setStatus(client.getStatus());
-        return clientDetaislDto;
+        ClientDetailsDto clientDetailsDto = new ClientDetailsDto();
+        clientDetailsDto.setClientId(client.getId());
+        clientDetailsDto.setFullName(client.getFullName());
+        clientDetailsDto.setPhoneNumber(client.getPhoneNumber());
+        clientDetailsDto.setEmail(client.getEmail());
+        clientDetailsDto.setWalletNumber(clientWallet.getWalletNumber());
+        clientDetailsDto.setBalance(clientWallet.getBalance());
+        clientDetailsDto.setNextKinName(nextOfKin.getNFullName());
+        clientDetailsDto.setNextKinPhone(nextOfKin.getNPhoneNumber());
+        clientDetailsDto.setStatus(client.getStatus());
+        return clientDetailsDto;
     }
 
 }

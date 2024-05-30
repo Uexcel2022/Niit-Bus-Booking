@@ -1,6 +1,6 @@
 package com.uexcel.busbooking.service;
 
-import com.uexcel.busbooking.dto.ClientDetaislDto;
+import com.uexcel.busbooking.dto.ClientDetailsDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.entity.Client;
 
@@ -25,5 +25,5 @@ public interface ClientService {
 
     Client adminFindClientByEmailPhone(Map<String,String> clientSearch);
 
-    ClientDetaislDto getClientDetailsById(String clientId);
+    ClientDetailsDto getClientDetailsById(String clientId);
 }

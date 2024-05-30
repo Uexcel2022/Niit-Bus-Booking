@@ -3,8 +3,8 @@ package com.uexcel.busbooking.dto;
 import lombok.Data;
 
 @Data
-public class ClientDetaislDto {
-    private String Id;
+public class ClientDetailsDto {
+    private String ClientId;
     private String fullName;
     private String phoneNumber;
     private String email;
