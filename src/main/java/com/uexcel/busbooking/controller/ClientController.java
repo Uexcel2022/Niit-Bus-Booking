@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ClientController {
@@ -42,10 +43,22 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.login(clientEmailPasswordDto));
     }
 
-//    @DeleteMapping("/api/v1/delete_user/{userId}")
-//    public ResponseEntity<ResponseDto> deleteUserById(@PathVariable Long userId){
-//        return ResponseEntity.ok().body(signupService.deleteUser(userId));
-//
-//    }
+    @DeleteMapping("/api/v1/delete-client/{clientId}")
+    public ResponseEntity<String> deleteUserById(@PathVariable String clientId){
+        return ResponseEntity.ok().body(clientService.deleteClient(clientId));
+
+    }
+
+    @DeleteMapping("/api/v1/admin-client-status-management/{clientId}/{clientStatus}")
+    public ResponseEntity<String> AdminClientStatusManagement(@PathVariable String clientId, @PathVariable String clientStatus){
+        return ResponseEntity.ok().body(clientService.adminUpdateClientStatus(clientId,clientStatus));
+
+    }
+
+    @PutMapping("/api/v1/admin-client-search")
+    public ResponseEntity<Client> adminClientSearch (@RequestBody Map<String,String> clientSearch){
+        return ResponseEntity.ok().body(clientService.adminFindClientByEmailPhone(clientSearch));
+
+    }
 
 }

@@ -5,6 +5,7 @@ import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Client;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ClientService {
 
@@ -17,4 +18,10 @@ public interface ClientService {
     Client updateClient(String id, Client client);
 
     ResponseDto login(ClientEmailPasswordDto clientEmailPasswordDto);
+
+    String deleteClient(String clientId);
+
+    String adminUpdateClientStatus(String clientId, String clientStatus);
+
+    Client adminFindClientByEmailPhone(Map<String,String> clientSearch);
 }

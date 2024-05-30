@@ -2,8 +2,8 @@ package com.uexcel.busbooking.controller;
 
 import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.dto.WalletFundingDto;
+import com.uexcel.busbooking.dto.WalletInfoDto;
 import com.uexcel.busbooking.dto.WalletTransactionInfoDto;
-import com.uexcel.busbooking.entity.ClientWallet;
 import com.uexcel.busbooking.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class WalletController {
     }
 
     @GetMapping("/api/v1/client-wallet/{clientId}")
-    public ResponseEntity<ClientWallet> findWalletUserById(@PathVariable String clientId){
+    public ResponseEntity<WalletInfoDto> findWalletUserById(@PathVariable String clientId){
         return ResponseEntity.ok().body(walletService.findWalletByWalletNumber(clientId));
 
     }

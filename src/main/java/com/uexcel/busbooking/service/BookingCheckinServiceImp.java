@@ -15,6 +15,7 @@ import java.util.Optional;
 @Service
 public class BookingCheckinServiceImp implements BookingCheckinService {
     private final Repos repos;
+
     public BookingCheckinServiceImp(Repos repos) {
         this.repos = repos;
     }
@@ -24,42 +25,47 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
     public BookingInfoDto processBooking(String clientId, String routeId) {
 
         Booking bk = repos.getBookingRepository().findByClientId(clientId,routeId);
+        String status400 = "400";
         if(bk != null){
 
             throw new CustomException("You have unused ticked on this route!!!"+" Ticked Number: "
-                    +bk.getTicketNumber(),"404");
+                    +bk.getTicketNumber(), status400);
         }
         double price;
         double walletBalance;
         double newWalletBalance;
         BookingInfoDto bookingInfoDto = new BookingInfoDto();
         Booking booking = new Booking();
-        Optional<Client> client = repos.getClientRepository().findById(clientId);
-        Client u;
-        if(client.isPresent()){
-            u = client.get();
-        } else throw new CustomException("User not found","404");
+        String activeStatus = "active";
+        Client client = repos.getClientRepository().findByIdAndStatus(clientId, activeStatus);
+        String status404 = "404";
+        if(client ==null) {
+            throw new CustomException("Client not found", status404);
+        }
 
         ClientWallet wallet = repos.getClientWalletRepository()
-                .findByClientId(clientId);
+                .findByClientIdAndStatus(clientId, activeStatus);
+        if(wallet == null) {
+            throw new CustomException("Wallet not found", status404);
+        }
         walletBalance = wallet.getBalance();
         Optional<Route> route = repos.getRouteRepository().findById(routeId);
 
         Route r;
         if(route.isPresent()){
             r = route.get();
-        } else throw new CustomException("Route not found","404");
+        } else throw new CustomException("Route not found", status400);
 
         price = r.getPrice();
 
         if(walletBalance < price){
-            throw new CustomException("Insufficient balance","402");
+            throw new CustomException("Insufficient balance", status404);
         }
 
         newWalletBalance = walletBalance - price;
         wallet.setBalance(newWalletBalance);
         booking.setRoute(r);
-        booking.setClient(u);
+        booking.setClient(client);
 
         WalletTransaction walletTransaction = new WalletTransaction();
         walletTransaction.setBank("Wallet");
@@ -67,14 +73,14 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         walletTransaction.setAccountNumber(wallet.getWalletNumber());
         walletTransaction.setAmount(-r.getPrice());
         walletTransaction.setWallet(wallet);
-        walletTransaction.setFullName(u.getFullName());
+        walletTransaction.setFullName(client.getFullName());
         walletTransaction.setTransactionDate(LocalDate.now());
         repos.getWallTransactionRepository().save(walletTransaction);
 
 
         booking.setTicketStatus("valid");
 
-        bookingInfoDto.setFullName(u.getFullName());
+        bookingInfoDto.setFullName(client.getFullName());
 //        bookingInfoDto.setGender(u.getGender());
         bookingInfoDto.setTickNumber(booking.getTicketNumber());
         bookingInfoDto.setRouteName(r.getRouteName());
