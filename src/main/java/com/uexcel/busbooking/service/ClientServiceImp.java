@@ -7,6 +7,7 @@ import com.uexcel.busbooking.entity.ClientWallet;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Repos;
+import com.uexcel.busbooking.utils.UtilsToken;
 import com.uexcel.busbooking.utils.Validation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ClientServiceImp implements ClientService {
@@ -104,16 +106,20 @@ public class ClientServiceImp implements ClientService {
 
     @Override
     public String login(ClientEmailPasswordDto clientEmailPasswordDto) {
-        Client client = repos.getClientRepository().findByEmailAndStatus(clientEmailPasswordDto.getEmail(),activeStatus);
+        Client client = repos.getClientRepository().findByEmailAndStatus(clientEmailPasswordDto.getEmail(), activeStatus);
         if (client == null) {
-            throw new CustomException("Invalid login credentials",statusCode404);
+            throw new CustomException("Invalid login credentials ",statusCode404);
         } else {
             if(!client.getPassword().equals(clientEmailPasswordDto.getPassword())){
                 throw new CustomException("Invalid login credentials",statusCode404);
             }
         }
 
-        return "You have log in successful!!!";
+        String date = new Random().nextInt(1000000) + "";
+        String text = clientEmailPasswordDto.getEmail() + ":::" + date;
+        UtilsToken ut = new UtilsToken();
+
+        return String.format("You have log in successfully - %s", ut.encode(text));
     }
 
     @Override

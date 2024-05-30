@@ -108,6 +108,7 @@ public class SignupServiceImp implements SignupService{
         client.setEmail(signupDto.getEmail());
         client.setPassword(signupDto.getPassword());
         client.setPhoneNumber(signupDto.getPhoneNumber());
+        client.setStatus("active");
 
         nextOfKin.setNFullName(signupDto.getNFullName());
 //        nextOfKin.setNGender(signupDto.getNGender());

@@ -17,7 +17,7 @@ public class SignupController {
         this.signupService = signupService;
     }
 
-    @PostMapping("/api/v1/signup")
+    @PostMapping("/api/v1/auth/register")
     public ResponseEntity<String> signup(@RequestBody SignupDto signupDto) {
         return  ResponseEntity.status(201).body(signupService.processSignup(signupDto));
     }

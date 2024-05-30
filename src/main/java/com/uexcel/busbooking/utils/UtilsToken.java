@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.utils;
 
+import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.dto.LoginDto;
 import com.uexcel.busbooking.exception.CustomException;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,14 @@ public class UtilsToken {
         return Pattern.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", email);
     }
     public boolean validateEmailFromToken(String token) throws Exception {
-        return validateEmail(decode(token));
+        String email = retrieveEmailFromToken(token);
+        return validateEmail(email);
     }
-    public String encode(LoginDto loginDto) {
-        return Base64.getEncoder().encodeToString(loginDto.getEmail().getBytes());
+    public String retrieveEmailFromToken(String token) throws Exception {
+        return decode(token).split(":::")[0];
+    }
+    public String encode(String text) {
+        return Base64.getEncoder().encodeToString(text.getBytes());
     }
     public String decode(String token) throws Exception {
         try {

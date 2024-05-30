@@ -39,7 +39,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.updateClient(id, client));
     }
 
-    @PostMapping("login")
+    @PostMapping("auth/login")
     public ResponseEntity<String> login(@RequestBody ClientEmailPasswordDto clientEmailPasswordDto){
         return ResponseEntity.ok().body(clientService.login(clientEmailPasswordDto));
     }

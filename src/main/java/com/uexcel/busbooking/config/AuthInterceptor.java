@@ -10,5 +10,6 @@ public class AuthInterceptor implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new TokenInterceptor()).excludePathPatterns("/**/auth/login", "/**/auth/register");
+//        registry.addInterceptor(new TokenInterceptor()).excludePathPatterns("/**/**");
     }
 }
