@@ -21,12 +21,12 @@ public class BusRouteController {
     }
 
     @PostMapping("/api/v1/add-bus")
-    public ResponseEntity<ResponseDto> addBus(@RequestBody BusRouteDto busRouteDto) {
+    public ResponseEntity<String> addBus(@RequestBody BusRouteDto busRouteDto) {
         return ResponseEntity.status(201).body(busRouteService.addBus(busRouteDto));
     }
 
     @PostMapping("/api/v1/add-route")
-    public ResponseEntity<ResponseDto> addRoute(@RequestBody BusRouteDto busRouteDto) {
+    public ResponseEntity<String> addRoute(@RequestBody BusRouteDto busRouteDto) {
         return ResponseEntity.status(201).body(busRouteService.addRout(busRouteDto));
     }
 
@@ -53,13 +53,13 @@ public class BusRouteController {
 
 
     @PutMapping("/api/v1/update-bus/{id}")
-    public ResponseEntity<ResponseDto> updateBus(@PathVariable("id") String busId,
-                                                 @RequestBody BusRouteDto busRouteDto) {
+    public ResponseEntity<String> updateBus(@PathVariable("id") String busId,
+                                            @RequestBody BusRouteDto busRouteDto) {
         return ResponseEntity.ok().body(busRouteService.updateBus(busId,busRouteDto));
     }
 
     @PutMapping("/api/v1/update-bus-route/{busCode}/{routeName}")
-    public ResponseEntity<ResponseDto> updateBusRoute(@PathVariable("busCode") String busCode,
+    public ResponseEntity<String> updateBusRoute(@PathVariable("busCode") String busCode,
                                                  @PathVariable("routeName") String routeName) {
         return ResponseEntity.status(200).body(busRouteService.updateBusRoute(busCode,routeName));
     }
@@ -70,8 +70,8 @@ public class BusRouteController {
     }
 
     @PutMapping("/api/v1/update-route/{id}")
-    public ResponseEntity<ResponseDto> updateRoute(@PathVariable("id") String routeId,
-                                                 @RequestBody BusRouteDto busRouteDto) {
+    public ResponseEntity<String> updateRoute(@PathVariable("id") String routeId,
+                                              @RequestBody BusRouteDto busRouteDto) {
         return ResponseEntity.ok().body(busRouteService.updateRoute(routeId,busRouteDto));
     }
 

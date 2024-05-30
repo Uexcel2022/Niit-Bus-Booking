@@ -8,7 +8,7 @@ public interface BookingCheckinService {
 
     BookingInfoDto processBooking(String userId, String routeId);
 
-    ResponseDto processCheckin(CheckinDto checkinDto);
+    String processCheckin(CheckinDto checkinDto);
 
     List<BookingInfoDto> findBookingByClientId(String clientId);
 

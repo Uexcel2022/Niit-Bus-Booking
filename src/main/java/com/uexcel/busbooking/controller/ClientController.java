@@ -1,7 +1,6 @@
 package com.uexcel.busbooking.controller;
 
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
-import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.service.ClientService;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class ClientController {
     }
 
     @PostMapping("/api/v1/login")
-    public ResponseEntity<ResponseDto> login(@RequestBody ClientEmailPasswordDto clientEmailPasswordDto){
+    public ResponseEntity<String> login(@RequestBody ClientEmailPasswordDto clientEmailPasswordDto){
         return ResponseEntity.ok().body(clientService.login(clientEmailPasswordDto));
     }
 

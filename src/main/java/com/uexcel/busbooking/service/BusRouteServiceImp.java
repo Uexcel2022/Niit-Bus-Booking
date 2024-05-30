@@ -7,10 +7,8 @@ import com.uexcel.busbooking.entity.Checkin;
 import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Repos;
 import com.uexcel.busbooking.utils.Validation;
-import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.entity.Route;
-import com.uexcel.busbooking.repository.RouteRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,7 @@ public class BusRouteServiceImp implements BusRouteService{
 
 
     @Override
-    public ResponseDto updateBusRoute(String busCode, String routeName) {
+    public String updateBusRoute(String busCode, String routeName) {
         Bus bus = repos.getBusRepository().findByBusCode(busCode);
         if(bus == null) {
             throw new CustomException("Invalid bus code.",statusCode400);
@@ -46,9 +44,8 @@ public class BusRouteServiceImp implements BusRouteService{
 
         bus.setRoute(route);
         repos.getBusRepository().save(bus);
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setResponse("Bus route updated successfully.");
-        return responseDto;
+        return "Bus route updated successfully.";
+
     }
 
     @Override
@@ -82,21 +79,20 @@ public class BusRouteServiceImp implements BusRouteService{
     }
 
     @Override
-    public ResponseDto updateRoute(String routeId, BusRouteDto busRouteDto) {
+    public String updateRoute(String routeId, BusRouteDto busRouteDto) {
         Optional<Route> route = repos.getRouteRepository().findById(routeId);
         if(route.isPresent()) {
             Route routeToUpdate = route.get();
             routeToUpdate.setRouteName(busRouteDto.getRouteName());
             routeToUpdate.setPrice(route.get().getPrice());
             repos.getRouteRepository().save(routeToUpdate);
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.setResponse("Route updated successfully.");
-            return responseDto;
+            return"Route updated successfully.";
+
         } else throw new CustomException("Invalid route.",statusCode400);
     }
 
     @Override
-    public ResponseDto updateBus(String busId, BusRouteDto busRouteDto) {
+    public String updateBus(String busId, BusRouteDto busRouteDto) {
         Optional<Bus> bus = repos.getBusRepository().findById(busId);
         if(bus.isPresent()) {
             Bus busToUpdate = bus.get();
@@ -118,14 +114,14 @@ public class BusRouteServiceImp implements BusRouteService{
             }
 
             repos.getBusRepository().save(busToUpdate);
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.setResponse("Bus updated successfully.");
-            return responseDto;
+
+            return "Bus updated successfully.";
+
         } else throw new CustomException("Invalid bus id.",statusCode400);
     }
 
     @Override
-    public ResponseDto addBus(BusRouteDto busRouteDto) {
+    public String addBus(BusRouteDto busRouteDto) {
         Route rt;
         Optional<Route> route = repos.getRouteRepository().findById(busRouteDto.getRouteId());
         if(route.isPresent()) {
@@ -140,15 +136,15 @@ public class BusRouteServiceImp implements BusRouteService{
         bus.setServiceStartDate(busRouteDto.getServiceStartDate());
         bus.setRoute(rt);
         repos.getBusRepository().save(bus);
-        return new ResponseDto("Bus added successfully.");
+        return "Bus added successfully.";
     }
 
-    public ResponseDto addRout(BusRouteDto busRouteDto) {
+    public String addRout(BusRouteDto busRouteDto) {
         Route route = new Route();
         route.setRouteName(busRouteDto.getRouteName());
         route.setPrice(busRouteDto.getPrice());
         repos.getRouteRepository().save(route);
-        return new ResponseDto("Route added successfully.");
+        return "Route added successfully.";
     }
 
     public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {

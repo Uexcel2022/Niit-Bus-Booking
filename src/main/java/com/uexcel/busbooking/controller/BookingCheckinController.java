@@ -23,7 +23,7 @@ public class BookingCheckinController {
     }
 
     @PostMapping("/api/v1/checkin")
-    public ResponseEntity<ResponseDto> processCheckin(@RequestBody CheckinDto checkinDto){
+    public ResponseEntity<String> processCheckin(@RequestBody CheckinDto checkinDto){
         return  ResponseEntity.ok().body(bookingCheckinService.processCheckin(checkinDto));
     }
 

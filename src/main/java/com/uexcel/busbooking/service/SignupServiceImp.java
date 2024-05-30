@@ -1,7 +1,6 @@
 package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.SignupDto;
-import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.entity.ClientWallet;
@@ -24,7 +23,7 @@ public class SignupServiceImp implements SignupService{
       }
 
       @Transactional
-    public ResponseDto processSignup(SignupDto signupDto) {
+    public String processSignup(SignupDto signupDto) {
 
           String activeStatus = "active";
           String statusCode400 = "400";
@@ -126,9 +125,8 @@ public class SignupServiceImp implements SignupService{
         clientWallet.setClient(client);
         repos.getClientWalletRepository().save(clientWallet);
         repos.getNextOfKinRepository().save(nextOfKin);
-        ResponseDto responseDto = new ResponseDto();
-         responseDto.setResponse("You have successfully registered!");
-        return responseDto;
+         return "You have successfully registered!";
+
     }
 
 }

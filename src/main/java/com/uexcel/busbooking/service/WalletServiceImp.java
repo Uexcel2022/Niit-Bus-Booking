@@ -28,7 +28,7 @@ public class WalletServiceImp implements WalletService {
     //Tested ok
     @Override
     @Transactional
-    public ResponseDto processWalletFunding(WalletFundingDto walletFundingDto) {
+    public String processWalletFunding(WalletFundingDto walletFundingDto) {
 
         ClientWallet clientWallet = repos.getClientWalletRepository()
                 .findByWalletNumber(walletFundingDto.getWalletNumber());
@@ -52,8 +52,8 @@ public class WalletServiceImp implements WalletService {
         repos.getClientWalletRepository().save(clientWallet);
         repos.getWallTransactionRepository().save(walletTransaction);
         ResponseDto responseDto = new ResponseDto();
-        responseDto.setResponse("Transaction successful");
-        return responseDto;
+        return "Transaction successful";
+
 
     }
 
@@ -101,7 +101,7 @@ public class WalletServiceImp implements WalletService {
 
     @Override
     @Transactional
-    public WalletTransaction walletTransfer(Map<String, String> walletTransferData) {
+    public String walletTransfer(Map<String, String> walletTransferData) {
         double payerNewBalance;
         double payeeNewBalance;
         double balance;
@@ -120,6 +120,10 @@ public class WalletServiceImp implements WalletService {
             throw new CustomException("Wallet not found", statusCode404);
         }
          amount = Double.parseDouble(walletTransferData.get("amount"));
+
+        if(amount <=0){
+            throw new CustomException("Zero or negative value not allowed.", "400");
+        }
 
         if(payer.getBalance() < amount){
 
@@ -156,7 +160,7 @@ public class WalletServiceImp implements WalletService {
 
 
 
-        return payeeTransaction;
+        return "Transfer successful.";
     }
 
 

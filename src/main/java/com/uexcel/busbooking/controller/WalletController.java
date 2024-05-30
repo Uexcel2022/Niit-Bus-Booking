@@ -1,10 +1,8 @@
 package com.uexcel.busbooking.controller;
 
-import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.dto.WalletFundingDto;
 import com.uexcel.busbooking.dto.WalletInfoDto;
 import com.uexcel.busbooking.dto.WalletTransactionInfoDto;
-import com.uexcel.busbooking.entity.WalletTransaction;
 import com.uexcel.busbooking.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ public class WalletController {
     }
 
     @PostMapping("/api/v1/fund-wallet")
-    public ResponseEntity<ResponseDto> fundWallet(@RequestBody WalletFundingDto walletFundingDto){
+    public ResponseEntity<String> fundWallet(@RequestBody WalletFundingDto walletFundingDto){
 
         return ResponseEntity.ok().body(walletService.processWalletFunding(walletFundingDto));
     }
@@ -46,7 +44,7 @@ public class WalletController {
     }
 
     @PostMapping("/api/v1/client-wallet-transfer")
-    public ResponseEntity<WalletTransaction> walletTransfer(@RequestBody Map<String,String> walletTransferData){
+    public ResponseEntity<String> walletTransfer(@RequestBody Map<String,String> walletTransferData){
         return ResponseEntity.ok().body(walletService.walletTransfer(walletTransferData));
 
     }

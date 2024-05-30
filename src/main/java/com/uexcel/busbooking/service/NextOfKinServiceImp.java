@@ -7,8 +7,6 @@ import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class NextOfKinServiceImp implements NextOfKinService {
     private final NextOfKinRepository nextOfKinRepository;
@@ -41,7 +39,7 @@ public class NextOfKinServiceImp implements NextOfKinService {
     }
 
     @Override
-    public ResponseDto updateNextOfKin(String id, NextOfKin updatedNextOfKin) {
+    public String updateNextOfKin(String id, NextOfKin updatedNextOfKin) {
 
         NextOfKin toUpdateNextOfKin = nextOfKinRepository.findByClientIdAndStatus(id,activeStatus);
         String statusCode400 = "400";
@@ -71,11 +69,10 @@ public class NextOfKinServiceImp implements NextOfKinService {
             }else { throw new CustomException("Phone Number is invalid.", statusCode400); }
 
             nextOfKinRepository.save(toUpdateNextOfKin);
-            ResponseDto responseDto = new ResponseDto();
 
-            responseDto.setResponse("Updated may be successful if the information entered is valid." +
-                    "Please cross check; otherwise try again.");
-            return responseDto;
+
+            return "Updated may be successful if the information entered is valid." +
+                    "Please cross check; otherwise try again.";
         } else throw new CustomException("Update failed. Next of kin not found.", statusCode400);
     }
 

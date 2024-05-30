@@ -103,7 +103,7 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Override
-    public ResponseDto login(ClientEmailPasswordDto clientEmailPasswordDto) {
+    public String login(ClientEmailPasswordDto clientEmailPasswordDto) {
         Client client = repos.getClientRepository().findByEmailAndStatus(clientEmailPasswordDto.getEmail(),activeStatus);
         if (client == null) {
             throw new CustomException("Invalid login credentials",statusCode404);
@@ -113,7 +113,7 @@ public class ClientServiceImp implements ClientService {
             }
         }
 
-        return new ResponseDto("You have log in successful!!!");
+        return "You have log in successful!!!";
     }
 
     @Override

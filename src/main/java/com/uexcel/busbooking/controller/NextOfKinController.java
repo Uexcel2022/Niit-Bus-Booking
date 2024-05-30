@@ -1,6 +1,5 @@
 package com.uexcel.busbooking.controller;
 
-import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.service.NextOfKinService;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,8 @@ public class NextOfKinController {
     }
 
     @PutMapping("/api/v1/update-next-of-kin/{id}")
-    public ResponseEntity<ResponseDto> updateNextOfKinById(@PathVariable("id") String id,
-                                                           @RequestBody NextOfKin nextOfKin){
+    public ResponseEntity<String> updateNextOfKinById(@PathVariable("id") String id,
+                                                      @RequestBody NextOfKin nextOfKin){
         return ResponseEntity.status(200).body(nextOfKinService.updateNextOfKin(id, nextOfKin));
     }
 }

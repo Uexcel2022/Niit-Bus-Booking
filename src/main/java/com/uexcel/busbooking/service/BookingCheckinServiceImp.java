@@ -95,7 +95,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
 
     @Override
     @Transactional
-    public ResponseDto processCheckin(CheckinDto checkinDto) {
+    public String processCheckin(CheckinDto checkinDto) {
         Checkin checkin = new Checkin();
         Booking booking = repos.getBookingRepository().findByTicketNumber(checkinDto.getTicketNumber());
 
@@ -124,9 +124,7 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         checkin.setBooking(booking);
         repos.getBookingRepository().save(booking);
         repos.getCheckinRepository().save(checkin);
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setResponse("Checkin successful.");
-        return responseDto;
+        return("Checkin successful.");
     }
 
     //Working on this
