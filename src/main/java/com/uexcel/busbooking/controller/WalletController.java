@@ -40,7 +40,13 @@ public class WalletController {
     }
 
     @GetMapping("client-wallet/{clientId}")
-    public ResponseEntity<WalletInfoDto> findWalletUserById(@PathVariable String clientId){
+    public ResponseEntity<WalletInfoDto> findWalletUserById(@PathVariable String clientId,
+                                                            @RequestHeader("rapid-transit") String token) throws Exception {
+        log.info("token");
+        Client client = repos.getClientRepository().findByEmail(ut.retrieveEmailFromToken(token));
+//        walletService.findWalletTransByWalletNumber(clientId);
+        if (client != null) log.info(client.toString());
+        else log.info("absent");
         return ResponseEntity.ok().body(walletService.findWalletByWalletNumber(clientId));
 
     }
@@ -51,6 +57,7 @@ public class WalletController {
             @RequestHeader("rapid-transit") String token) throws Exception {
         log.info(token);
         Client client = repos.getClientRepository().findByEmail(ut.retrieveEmailFromToken(token));
+        walletService.findWalletTransByWalletNumber(walletId);
         if (client != null) log.info(client.toString());
         else log.info("absent");
         return ResponseEntity.ok().body(walletService.findWalletTransByWalletNumber(walletId));
