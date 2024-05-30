@@ -11,8 +11,10 @@ import com.uexcel.busbooking.utils.Repos;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WalletServiceImp implements WalletService {
@@ -97,6 +99,65 @@ public class WalletServiceImp implements WalletService {
 
     }
 
+    @Override
+    @Transactional
+    public WalletTransaction walletTransfer(Map<String, String> walletTransferData) {
+        double payerNewBalance;
+        double payeeNewBalance;
+        double balance;
+        double amount;
+        String activeStatus = "active";
+
+        ClientWallet payer = repos.getClientWalletRepository()
+                .findByWalletNumberAndStatus(walletTransferData.get("fromWalletNumber"), activeStatus);
+        if (payer == null) {
+            throw new CustomException("Wallet not found", statusCode404);
+        }
+
+        ClientWallet payee = repos.getClientWalletRepository()
+                .findByWalletNumberAndStatus(walletTransferData.get("toWalletNumber"), activeStatus);
+        if (payee == null) {
+            throw new CustomException("Wallet not found", statusCode404);
+        }
+         amount = Double.parseDouble(walletTransferData.get("amount"));
+
+        if(payer.getBalance() < amount){
+
+            throw new CustomException("Insufficient balance", statusCode404);
+        }
+
+        payerNewBalance = payer.getBalance()- amount;
+        payeeNewBalance = payee.getBalance()+ amount;
+
+        WalletTransaction payerTransaction = new WalletTransaction();
+        payerTransaction.setTransactionDate(LocalDate.now());
+        payerTransaction.setFullName(payer.getClient().getFullName());
+        payerTransaction.setAccountNumber(payer.getWalletNumber());
+        payerTransaction.setTransactionType("Wallet Transfer");
+        payerTransaction.setBank("wallet");
+        payerTransaction.setAmount(-amount);
+        payerTransaction.setWallet(payer);
+        payer.setBalance(payerNewBalance);
+
+        WalletTransaction payeeTransaction = new WalletTransaction();
+        payeeTransaction.setTransactionDate(LocalDate.now());
+        payeeTransaction.setAccountNumber(payer.getWalletNumber());
+        payeeTransaction.setFullName(payer.getClient().getFullName());
+        payeeTransaction.setTransactionType("Wallet Transfer");
+        payeeTransaction.setBank("wallet");
+        payeeTransaction.setAmount(amount);
+        payeeTransaction.setWallet(payee);
+        payee.setBalance(payeeNewBalance);
+
+        repos.getClientWalletRepository().save(payer);
+        repos.getClientWalletRepository().save(payee);
+        repos.getWallTransactionRepository().save(payerTransaction);
+        repos.getWallTransactionRepository().save(payeeTransaction);
+
+
+
+        return payeeTransaction;
+    }
 
 
     private List<WalletTransactionInfoDto> checkResult(List<WalletTransaction> walletTransactions) {
@@ -111,6 +172,9 @@ public class WalletServiceImp implements WalletService {
 
         return walletTransactionInfoDtos;
     }
+
+
+
 
     private static WalletTransactionInfoDto getWalletTransactionInfoDto(WalletTransaction walletTransaction) {
         WalletTransactionInfoDto walletTransactionInfoDto = new WalletTransactionInfoDto();

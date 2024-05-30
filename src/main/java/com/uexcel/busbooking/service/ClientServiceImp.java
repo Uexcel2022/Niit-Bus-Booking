@@ -157,8 +157,14 @@ public class ClientServiceImp implements ClientService {
     public Client adminFindClientByEmailPhone(Map<String,String> clientSearch) {
         Client client = repos.getClientRepository().findByEmailOrPhoneNumber(clientSearch.get("email"),clientSearch.get("phone"));
         if (client != null) {
-            client.setStatus(clientSearch.get("status"));
-            repos.getClientRepository().save(client);
+            ClientWallet clientWallet = repos.getClientWalletRepository().findByClientId(client.getId());
+            clientWallet.setStatus(clientSearch.get("status"));
+            clientWallet.getClient().setStatus(clientSearch.get("status"));
+            NextOfKin nextOfKin = repos.getNextOfKinRepository().findByClientId(client.getId());
+            nextOfKin.setStatus(clientSearch.get("status"));
+            nextOfKin.getClient().setStatus(clientSearch.get("status"));
+            repos.getNextOfKinRepository().save(nextOfKin);
+            repos.getClientWalletRepository().save(clientWallet);
             return client;
         } else throw new CustomException("Client not found",statusCode404);
     }

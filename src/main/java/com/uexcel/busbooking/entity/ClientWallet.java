@@ -14,6 +14,6 @@ public class ClientWallet {
     private double balance;
     private String status;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false,fetch = FetchType.EAGER)
     private Client client;
 }

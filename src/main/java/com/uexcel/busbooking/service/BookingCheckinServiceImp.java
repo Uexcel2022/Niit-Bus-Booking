@@ -68,8 +68,8 @@ public class BookingCheckinServiceImp implements BookingCheckinService {
         booking.setClient(client);
 
         WalletTransaction walletTransaction = new WalletTransaction();
-        walletTransaction.setBank("Wallet");
-        walletTransaction.setTransactionType("Booking");
+        walletTransaction.setBank("wallet");
+        walletTransaction.setTransactionType("booking");
         walletTransaction.setAccountNumber(wallet.getWalletNumber());
         walletTransaction.setAmount(-r.getPrice());
         walletTransaction.setWallet(wallet);
