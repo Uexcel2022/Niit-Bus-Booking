@@ -25,6 +25,7 @@ public class SignupServiceImp implements SignupService{
       @Transactional
     public String processSignup(SignupDto signupDto) {
 
+
           String activeStatus = "active";
           String statusCode400 = "400";
           if(repos.getClientRepository()
@@ -37,10 +38,10 @@ public class SignupServiceImp implements SignupService{
             throw new CustomException("The phone number is in use.", statusCode400);
         }
 
-//        if(repos.getClientWalletRepository()
-//                .findByWalletNumber(signupDto.getWalletNumber()) != null){
-//            throw new CustomException("Wallet number is in use.","400");
-//        }
+        if(repos.getClientWalletRepository()
+                .findByWalletNumber(signupDto.getWalletNumber()) != null){
+            throw new CustomException("Wallet number is in use.","400");
+        }
 
         Client client = new Client();
         NextOfKin nextOfKin = new NextOfKin();
@@ -108,17 +109,18 @@ public class SignupServiceImp implements SignupService{
         client.setEmail(signupDto.getEmail());
         client.setPassword(signupDto.getPassword());
         client.setPhoneNumber(signupDto.getPhoneNumber());
-        client.setStatus("active");
+        client.setStatus(activeStatus);
 
         nextOfKin.setNFullName(signupDto.getNFullName());
 //        nextOfKin.setNGender(signupDto.getNGender());
         nextOfKin.setAddress(signupDto.getAddress());
         nextOfKin.setLga(signupDto.getLga());
         nextOfKin.setState(signupDto.getState());
+        nextOfKin.setStatus(activeStatus);
         nextOfKin.setNPhoneNumber(signupDto.getNPhoneNumber());
 
         clientWallet.setBalance(0.0);
-        clientWallet.setStatus("active");
+        clientWallet.setStatus(activeStatus);
         clientWallet.setWalletNumber(signupDto.getWalletNumber());
 
         repos.getClientRepository().save(client);

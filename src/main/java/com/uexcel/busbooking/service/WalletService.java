@@ -16,7 +16,7 @@ public interface WalletService {
     List<WalletTransactionInfoDto> findWalletTransByWalletNumber(String id);
 
 
-    List<WalletTransactionInfoDto> findClientWallet();
+    List<WalletTransactionInfoDto> findAllClientWallet();
 
     String walletTransfer(Map<String, String> walletTransferData);
 }

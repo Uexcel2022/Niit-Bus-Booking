@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.controller;
 
+import com.uexcel.busbooking.dto.ClientDetaislDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.service.ClientService;
@@ -16,6 +17,11 @@ public class ClientController {
     private final ClientService clientService;
     public ClientController(ClientService clientService){
         this.clientService = clientService;
+    }
+
+    @GetMapping("client-details/{clientId}")
+    public ResponseEntity<ClientDetaislDto> getClientDetails(@PathVariable String clientId){
+       return ResponseEntity.ok().body(clientService.getClientDetailsById(clientId));
     }
 
     @PostMapping("/fetch-client-email")

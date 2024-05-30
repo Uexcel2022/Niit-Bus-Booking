@@ -93,7 +93,7 @@ public class WalletServiceImp implements WalletService {
     }
 
     @Override
-    public List<WalletTransactionInfoDto> findClientWallet() {
+    public List<WalletTransactionInfoDto> findAllClientWallet() {
         List<WalletTransaction> walletTransactions = repos.getWallTransactionRepository().findAll();
         return checkResult(walletTransactions);
 
@@ -157,7 +157,6 @@ public class WalletServiceImp implements WalletService {
         repos.getClientWalletRepository().save(payee);
         repos.getWallTransactionRepository().save(payerTransaction);
         repos.getWallTransactionRepository().save(payeeTransaction);
-
 
 
         return "Transfer successful.";

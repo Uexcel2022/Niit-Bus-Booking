@@ -66,7 +66,7 @@ public class WalletController {
 
     @GetMapping("client-wallet")
     public ResponseEntity<List<WalletTransactionInfoDto>> findWalletTransactionByCode(){
-        return ResponseEntity.ok().body(walletService.findClientWallet());
+        return ResponseEntity.ok().body(walletService.findAllClientWallet());
 
     }
 
