@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/v1")
 public class WalletController {
     private final WalletService walletService;
 
@@ -20,31 +21,31 @@ public class WalletController {
         this.walletService = walletService;
     }
 
-    @PostMapping("/api/v1/fund-wallet")
+    @PostMapping("fund-wallet")
     public ResponseEntity<String> fundWallet(@RequestBody WalletFundingDto walletFundingDto){
 
         return ResponseEntity.ok().body(walletService.processWalletFunding(walletFundingDto));
     }
 
-    @GetMapping("/api/v1/client-wallet/{clientId}")
+    @GetMapping("client-wallet/{clientId}")
     public ResponseEntity<WalletInfoDto> findWalletUserById(@PathVariable String clientId){
         return ResponseEntity.ok().body(walletService.findWalletByWalletNumber(clientId));
 
     }
 
-    @GetMapping("/api/v1/client-wallet-trans/{walletId}")
+    @GetMapping("client-wallet-trans/{walletId}")
     public ResponseEntity<List<WalletTransactionInfoDto>> findWalletTransactionByCode(@PathVariable String walletId){
        return ResponseEntity.ok().body(walletService.findWalletTransByWalletNumber(walletId));
 
     }
 
-    @GetMapping("/api/v1/client-wallet")
+    @GetMapping("client-wallet")
     public ResponseEntity<List<WalletTransactionInfoDto>> findWalletTransactionByCode(){
         return ResponseEntity.ok().body(walletService.findClientWallet());
 
     }
 
-    @PostMapping("/api/v1/client-wallet-transfer")
+    @PostMapping("client-wallet-transfer")
     public ResponseEntity<String> walletTransfer(@RequestBody Map<String,String> walletTransferData){
         return ResponseEntity.ok().body(walletService.walletTransfer(walletTransferData));
 
