@@ -17,4 +17,8 @@ public interface ClientWalletRepository extends JpaRepository<ClientWallet,Strin
     ClientWallet findByClientId(String clientId);
     
     ClientWallet findByClientIdOrWalletNumber(String clientId, String walletNumber);
+
+    ClientWallet findByClientIdAndStatus(String clientId, String status);
+
+    ClientWallet findByWalletNumberAndStatus(String walletNumber, String status);
 }

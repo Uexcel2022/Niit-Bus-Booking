@@ -1,8 +1,8 @@
 package com.uexcel.busbooking.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ClientEmailPasswordDto {
     private String email;
     private String password;

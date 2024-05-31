@@ -7,10 +7,8 @@ import com.uexcel.busbooking.entity.Checkin;
 import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Repos;
 import com.uexcel.busbooking.utils.Validation;
-import com.uexcel.busbooking.dto.ResponseDto;
 import com.uexcel.busbooking.entity.Bus;
 import com.uexcel.busbooking.entity.Route;
-import com.uexcel.busbooking.repository.RouteRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +21,8 @@ public class BusRouteServiceImp implements BusRouteService{
 
     private final Validation validation;
     private final Repos repos;
+    private final String statusCode404 = "404";
+    private final String  statusCode400 = "400";
 
     public BusRouteServiceImp(Validation validation, Repos repos) {
 
@@ -32,21 +32,20 @@ public class BusRouteServiceImp implements BusRouteService{
 
 
     @Override
-    public ResponseDto updateBusRoute(String busCode, String routeName) {
+    public String updateBusRoute(String busCode, String routeName) {
         Bus bus = repos.getBusRepository().findByBusCode(busCode);
         if(bus == null) {
-            throw new CustomException("Invalid bus code.","400");
+            throw new CustomException("Invalid bus code.",statusCode400);
         }
         Route route = repos.getRouteRepository().findByRouteName(routeName);
         if(route == null) {
-            throw new CustomException("Invalid route name.","400");
+            throw new CustomException("Invalid route name.",statusCode400);
         }
 
         bus.setRoute(route);
         repos.getBusRepository().save(bus);
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setResponse("Bus route updated successfully.");
-        return responseDto;
+        return "Bus route updated successfully.";
+
     }
 
     @Override
@@ -64,7 +63,7 @@ public class BusRouteServiceImp implements BusRouteService{
 
         Bus bus = repos.getBusRepository().findByBusCode(busCode);
         if(bus == null) {
-            throw new CustomException("Invalid bus code.","400");
+            throw new CustomException("Invalid bus code.",statusCode400);
         }
         return bus;
     }
@@ -74,27 +73,26 @@ public class BusRouteServiceImp implements BusRouteService{
 
         Route route = repos.getRouteRepository().findByRouteName(routeName);
         if(route == null) {
-            throw new CustomException("Invalid route name.","400");
+            throw new CustomException("Invalid route name.",statusCode400);
         }
         return route;
     }
 
     @Override
-    public ResponseDto updateRoute(String routeId, BusRouteDto busRouteDto) {
+    public String updateRoute(String routeId, BusRouteDto busRouteDto) {
         Optional<Route> route = repos.getRouteRepository().findById(routeId);
         if(route.isPresent()) {
             Route routeToUpdate = route.get();
             routeToUpdate.setRouteName(busRouteDto.getRouteName());
             routeToUpdate.setPrice(route.get().getPrice());
             repos.getRouteRepository().save(routeToUpdate);
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.setResponse("Route updated successfully.");
-            return responseDto;
-        } else throw new CustomException("Invalid route.","400");
+            return"Route updated successfully.";
+
+        } else throw new CustomException("Invalid route.",statusCode400);
     }
 
     @Override
-    public ResponseDto updateBus(String busId, BusRouteDto busRouteDto) {
+    public String updateBus(String busId, BusRouteDto busRouteDto) {
         Optional<Bus> bus = repos.getBusRepository().findById(busId);
         if(bus.isPresent()) {
             Bus busToUpdate = bus.get();
@@ -116,19 +114,19 @@ public class BusRouteServiceImp implements BusRouteService{
             }
 
             repos.getBusRepository().save(busToUpdate);
-            ResponseDto responseDto = new ResponseDto();
-            responseDto.setResponse("Bus updated successfully.");
-            return responseDto;
-        } else throw new CustomException("Invalid bus id.","400");
+
+            return "Bus updated successfully.";
+
+        } else throw new CustomException("Invalid bus id.",statusCode400);
     }
 
     @Override
-    public ResponseDto addBus(BusRouteDto busRouteDto) {
+    public String addBus(BusRouteDto busRouteDto) {
         Route rt;
         Optional<Route> route = repos.getRouteRepository().findById(busRouteDto.getRouteId());
         if(route.isPresent()) {
             rt = route.get();
-        }else {throw new CustomException("Invalid route.","404");}
+        }else {throw new CustomException("Invalid route.",statusCode400);}
 
         Bus bus = new Bus();
         bus.setBusCode(busRouteDto.getBusCode());
@@ -138,22 +136,22 @@ public class BusRouteServiceImp implements BusRouteService{
         bus.setServiceStartDate(busRouteDto.getServiceStartDate());
         bus.setRoute(rt);
         repos.getBusRepository().save(bus);
-        return new ResponseDto("Bus added successfully.");
+        return "Bus added successfully.";
     }
 
-    public ResponseDto addRout(BusRouteDto busRouteDto) {
+    public String addRout(BusRouteDto busRouteDto) {
         Route route = new Route();
         route.setRouteName(busRouteDto.getRouteName());
         route.setPrice(busRouteDto.getPrice());
         repos.getRouteRepository().save(route);
-        return new ResponseDto("Route added successfully.");
+        return "Route added successfully.";
     }
 
     public List<BusCheckinInfoDto> findBusesOnRoute(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCurrentRouteId(
                 busCheckinQueryDto.getBusCurrentRouteId());
         if(checkin.isEmpty()){
-            throw new CustomException("Route not found.","404");
+            throw new CustomException("Route not found.",statusCode404);
         }
 
         return filterResultSet(checkin);
@@ -163,7 +161,7 @@ public class BusRouteServiceImp implements BusRouteService{
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCurrentRouteIdAndCheckinDate(
                 busCheckinQueryDto.getBusCurrentRouteId(), busCheckinQueryDto.getDate());
         if(checkin.isEmpty()){
-            throw new CustomException("Not found.","404");
+            throw new CustomException("Not found.",statusCode404);
         }
         return filterResultSet(checkin);
     }
@@ -171,7 +169,7 @@ public class BusRouteServiceImp implements BusRouteService{
     public List<BusCheckinInfoDto> findBusRoutes(BusCheckinQueryDto busCheckinQueryDto) {
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCode(busCheckinQueryDto.getBusCode());
         if(checkin.isEmpty()){
-            throw new CustomException("Not found.","404");
+            throw new CustomException("Not found.", statusCode404);
         }
         return filterResultSet(checkin);
     }
@@ -181,7 +179,7 @@ public class BusRouteServiceImp implements BusRouteService{
         List<Checkin> checkin = repos.getCheckinRepository().findByBusCodeAndCheckinDate(
                 busCheckinQueryDto.getBusCode(),busCheckinQueryDto.getDate());
         if(checkin.isEmpty()){
-            throw new CustomException("Not found.","404");
+            throw new CustomException("Not found.",statusCode404);
         }
         return filterResultSet(checkin);
     }

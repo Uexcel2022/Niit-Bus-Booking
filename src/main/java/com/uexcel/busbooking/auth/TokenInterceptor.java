@@ -21,7 +21,6 @@ public class TokenInterceptor implements HandlerInterceptor {
             throw new CustomException("Missing token", "401");
         }
         if (utils.validateEmailFromToken(authHeader)) {
-            log.info("authHeader: " + utils.decode(authHeader));
             return true;
         }
 //        response.sendError(HttpServletResponse.SC_FORBIDDEN,"Invalid token");

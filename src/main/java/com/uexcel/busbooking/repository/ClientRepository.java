@@ -2,14 +2,24 @@ package com.uexcel.busbooking.repository;
 
 import com.uexcel.busbooking.entity.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client,String> {
-    Client findByEmail(String email);
+
+    Client findByEmailAndStatus(String email, String status);
+
     Client findByEmailOrPhoneNumber(String email, String phone);
 
-    Client findByPhoneNumber(String phoneNumber);
+    Client findByPhoneNumberAndStatus(String phoneNumber, String status);
 
-//    boolean existsByEmailIgnoreCase(String email);
+    Client findByIdAndStatus(String id, String status);
+
+    List<Client> findAllByStatus(String status);
+    Client findByEmail(String email);
+
+    Client findByIdOrEmailAndStatus(String clientId, String email, String activeStatus);
 }

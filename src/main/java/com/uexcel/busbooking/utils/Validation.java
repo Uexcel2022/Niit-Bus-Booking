@@ -19,12 +19,11 @@ public class Validation {
 
     public  boolean checkEmail(String email){
 
-        return !email.matches("[a-z]+\\.?[a-z0-9_]*@[a-z0-9]+\\.?[a-z0-9]+\\.[a-z]{2,3}");
+        return !email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
     }
 
     public boolean checkPhone(String phone){
-
-        return !phone.matches("(\\+234|0)[7-9][01][0-9]{8}");
+        return !phone.matches("(\\+?234|0)[7-9][01][0-9]{8}");
     }
 
     public boolean checkPassword(String password){

@@ -2,10 +2,11 @@ package com.uexcel.busbooking.repository;
 
 import com.uexcel.busbooking.entity.Checkin;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-
+@Repository
 public interface CheckinRepository extends CrudRepository<Checkin, String> {
 
     //The buses that travelled the route

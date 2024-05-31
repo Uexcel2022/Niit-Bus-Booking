@@ -7,12 +7,12 @@ import com.uexcel.busbooking.entity.NextOfKin;
 import com.uexcel.busbooking.repository.NextOfKinRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class NextOfKinServiceImp implements NextOfKinService {
     private final NextOfKinRepository nextOfKinRepository;
     private  final Validation validation;
+    private final String activeStatus = "active";
+    private final String statusCode404 = "404";
     public NextOfKinServiceImp(NextOfKinRepository nextOfKinRepository, Validation validation) {
         this.nextOfKinRepository = nextOfKinRepository;
         this.validation = validation;
@@ -24,30 +24,29 @@ public class NextOfKinServiceImp implements NextOfKinService {
 
     @Override
     public NextOfKin findNextOfKinByUsrId(String userId) {
-        NextOfKin nextOfKin = nextOfKinRepository.findByUserId(userId);
+        NextOfKin nextOfKin = nextOfKinRepository.findByClientIdAndStatus(userId,activeStatus);
         if(nextOfKin != null) {
             return nextOfKin;
-        } else throw new CustomException("next of kin not found","404");
+        } else throw new CustomException("next of kin not found",statusCode404);
     }
 
     @Override
     public NextOfKin findByNextOfKinById(String id) {
-        Optional<NextOfKin> nextOfKin = nextOfKinRepository.findById(id);
-        if (nextOfKin.isPresent()) {
-            return nextOfKin.get();
-        }else  throw new CustomException("Next of kin not found","404");
+        NextOfKin nextOfKin = nextOfKinRepository.findByClientIdAndStatus(id,activeStatus);
+        if (nextOfKin != null) {
+            return nextOfKin;
+        }else  throw new CustomException("Next of kin not found",statusCode404);
     }
 
     @Override
-    public ResponseDto updateNextOfKin(String id, NextOfKin updatedNextOfKin) {
+    public String updateNextOfKin(String id, NextOfKin updatedNextOfKin) {
 
-        Optional<NextOfKin> nextOfKinOptional = nextOfKinRepository.findById(id);
-        if (nextOfKinOptional.isPresent()) {
-            NextOfKin toUpdateNextOfKin = nextOfKinOptional.get();
-
+        NextOfKin toUpdateNextOfKin = nextOfKinRepository.findByClientIdAndStatus(id,activeStatus);
+        String statusCode400 = "400";
+        if (toUpdateNextOfKin != null) {
             if(!validation.checkName(updatedNextOfKin.getNFullName())) {
                 toUpdateNextOfKin.setNFullName(updatedNextOfKin.getNFullName());
-            } else { throw new CustomException("First Name is invalid.","400"); }
+            } else { throw new CustomException("First Name is invalid.", statusCode400); }
 
 //            if(!validation.checkNullBlank(updatedNextOfKin.getNGender())) {
 //                toUpdateNextOfKin.setNGender(updatedNextOfKin.getNGender());
@@ -55,11 +54,11 @@ public class NextOfKinServiceImp implements NextOfKinService {
 
             if(!validation.checkNullBlank(updatedNextOfKin.getAddress())) {
                 toUpdateNextOfKin.setAddress(updatedNextOfKin.getAddress());
-            }else { throw new CustomException("Address is required.","400"); }
+            }else { throw new CustomException("Address is required.", statusCode400); }
 
             if(!validation.checkNullBlank(updatedNextOfKin.getLga())) {
                 toUpdateNextOfKin.setLga(updatedNextOfKin.getLga());
-            }else { throw new CustomException("Local Government Area is require.","400"); }
+            }else { throw new CustomException("Local Government Area is require.", statusCode400); }
 
             if(!validation.checkNullBlank(updatedNextOfKin.getState())) {
                 toUpdateNextOfKin.setState(updatedNextOfKin.getState());
@@ -67,15 +66,14 @@ public class NextOfKinServiceImp implements NextOfKinService {
 
             if(!validation.checkPhone(updatedNextOfKin.getNPhoneNumber())) {
                 toUpdateNextOfKin.setNPhoneNumber(updatedNextOfKin.getNPhoneNumber());
-            }else { throw new CustomException("Phone Number is invalid.","400"); }
+            }else { throw new CustomException("Phone Number is invalid.", statusCode400); }
 
             nextOfKinRepository.save(toUpdateNextOfKin);
-            ResponseDto responseDto = new ResponseDto();
 
-            responseDto.setResponse("Updated may be successful if the information entered is valid." +
-                    "Please cross check; otherwise try again.");
-            return responseDto;
-        } else throw new CustomException("Update failed. Next of kin not found.","404");
+
+            return "Updated may be successful if the information entered is valid." +
+                    "Please cross check; otherwise try again.";
+        } else throw new CustomException("Update failed. Next of kin not found.", statusCode400);
     }
 
 

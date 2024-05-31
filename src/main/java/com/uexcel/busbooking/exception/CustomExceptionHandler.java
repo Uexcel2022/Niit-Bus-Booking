@@ -21,7 +21,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (exception.getErrorCode().equals("400")) {
             errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
 
+        if (exception.getErrorCode().equals("401")) {
+            errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED, exception.getMessage());
         }
 
         if (exception.getErrorCode().equals("404")) {
@@ -47,7 +50,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("NullPointerException: " + exception.getMessage());
         }
         if (exception instanceof DataIntegrityViolationException) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry we encountered error while storing the data!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sorry we encountered error while storing the data! " + exception.getMessage());
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sorry we encountered an error: " + exception.getMessage());
     }
