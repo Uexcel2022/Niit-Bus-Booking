@@ -71,9 +71,19 @@ public class ClientController {
 
     }
 
-    @PostMapping("/api/v1/verify-email")
-    public ResponseEntity<String> verifyEmail(@RequestBody EmailDto emailDto){
-        return clientService.verifyEmail(emailDto.getEmail());
+    @PostMapping("request-email-otp")
+    public ResponseEntity<String> requestEmailOTP(@RequestBody EmailDto emailDto){
+        return clientService.requestEmailOTP(emailDto.getEmail());
     }
+
+    @PostMapping("verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestBody EmailDto emailDto){
+        return clientService.verifyEmail(emailDto);
+    }
+
+//    @PostMapping("change-password")
+//    public ResponseEntity<String> changePassword(@RequestBody EmailDto emailDto){
+//        return clientService.changePassword(emailDto.getEmail());
+//    }
 
 }

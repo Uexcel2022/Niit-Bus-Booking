@@ -19,6 +19,7 @@ public class Client {
     private LocalDate birthDate;
     @Column(unique=true, nullable = false)
     private String email;
+    private Boolean emailVerified = false;
     @Column(unique=true, nullable = false)
     private String phoneNumber;
     @Column(nullable = false)

@@ -2,6 +2,7 @@ package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.ClientDetailsDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
+import com.uexcel.busbooking.dto.EmailDto;
 import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.entity.ClientWallet;
 import com.uexcel.busbooking.entity.NextOfKin;
@@ -9,8 +10,6 @@ import com.uexcel.busbooking.exception.CustomException;
 import com.uexcel.busbooking.utils.Repos;
 import com.uexcel.busbooking.utils.UtilsToken;
 import com.uexcel.busbooking.utils.Validation;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -226,10 +225,18 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Override
-//    @EventListener(ApplicationReadyEvent.class)
-    public ResponseEntity<String> verifyEmail(String email) {
-        emailService.verifyEmail(email);
-        return ResponseEntity.ok().body("Email sent successfully");
+    public ResponseEntity<String> requestEmailOTP(String email) {
+        Boolean present = repos.getClientRepository().existsByEmail(email);
+        if (!present) {
+            throw new CustomException("No user with the email provided", "404");
+        }
+        emailService.requestEmailOTP(email);
+        return ResponseEntity.ok().body("OTP has been sent to the email provided");
+    }
+
+    @Override
+    public ResponseEntity<String> verifyEmail(EmailDto emailDto) {
+        return emailService.verifyEmail(emailDto);
     }
 
 }

@@ -20,6 +20,8 @@ public interface ClientRepository extends JpaRepository<Client,String> {
 
     List<Client> findAllByStatus(String status);
     Client findByEmail(String email);
+    Client findByEmailIgnoreCase(String email);
+    Boolean existsByEmail(String email);
 
     Client findByIdOrEmailAndStatus(String clientId, String email, String activeStatus);
 }

@@ -2,6 +2,7 @@ package com.uexcel.busbooking.service;
 
 import com.uexcel.busbooking.dto.ClientDetailsDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
+import com.uexcel.busbooking.dto.EmailDto;
 import com.uexcel.busbooking.entity.Client;
 import org.springframework.http.ResponseEntity;
 
@@ -27,5 +28,9 @@ public interface ClientService {
     Client adminFindClientByEmailPhone(Map<String,String> clientSearch);
 
     ClientDetailsDto getClientDetailsById(String clientId);
-    ResponseEntity<String> verifyEmail(String email);
+
+    ResponseEntity<String> requestEmailOTP(String email);
+
+    ResponseEntity<String> verifyEmail(EmailDto emailDto);
+
 }
