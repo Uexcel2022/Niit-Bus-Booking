@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.service;
 
+import com.uexcel.busbooking.dto.ChangePasswordDto;
 import com.uexcel.busbooking.dto.ClientDetailsDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.dto.EmailDto;
@@ -27,6 +28,8 @@ public class ClientServiceImp implements ClientService {
     private final String activeStatus = "active";
     private final String statusCode404 = "404";
     private final EmailService emailService;
+
+    UtilsToken ut = new UtilsToken();
 
     public ClientServiceImp( Validation validation, Repos repos, EmailService emailService) {
         this.validation = validation;
@@ -237,6 +240,22 @@ public class ClientServiceImp implements ClientService {
     @Override
     public ResponseEntity<String> verifyEmail(EmailDto emailDto) {
         return emailService.verifyEmail(emailDto);
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto, String token) throws Exception {
+        String email = ut.retrieveEmailFromToken(token);
+        Client client = repos.getClientRepository().findByEmailIgnoreCase(email);
+        if (client == null) {
+            throw new CustomException("Invalid User", "404");
+        }
+        if (client.getPassword().equals(changePasswordDto.getOldPassword())) {
+            client.setPassword(changePasswordDto.getNewPassword());
+            repos.getClientRepository().save(client);
+        } else {
+            throw new CustomException("Incorrect password", "409");
+        }
+        return ResponseEntity.ok().body("Password changed successfully");
     }
 
 }

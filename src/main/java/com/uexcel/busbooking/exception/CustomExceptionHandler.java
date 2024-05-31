@@ -41,6 +41,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         }
 
+        if (exception.getErrorCode().equals("409")) {
+            errorMessage = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+
+        }
+
         return ResponseEntity.status(errorMessage.getStatus()).body(errorMessage.getMessage());
     }
 

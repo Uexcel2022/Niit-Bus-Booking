@@ -1,5 +1,6 @@
 package com.uexcel.busbooking.service;
 
+import com.uexcel.busbooking.dto.ChangePasswordDto;
 import com.uexcel.busbooking.dto.ClientDetailsDto;
 import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
 import com.uexcel.busbooking.dto.EmailDto;
@@ -33,4 +34,5 @@ public interface ClientService {
 
     ResponseEntity<String> verifyEmail(EmailDto emailDto);
 
+    ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto, String token) throws Exception;
 }

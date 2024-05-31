@@ -1,9 +1,6 @@
 package com.uexcel.busbooking.controller;
 
-import com.uexcel.busbooking.dto.ClientDetailsDto;
-import com.uexcel.busbooking.dto.ClientEmailPasswordDto;
-import com.uexcel.busbooking.dto.EmailDto;
-import com.uexcel.busbooking.dto.ResponseDto;
+import com.uexcel.busbooking.dto.*;
 import com.uexcel.busbooking.entity.Client;
 import com.uexcel.busbooking.service.ClientService;
 import com.uexcel.busbooking.service.EmailService;
@@ -81,9 +78,9 @@ public class ClientController {
         return clientService.verifyEmail(emailDto);
     }
 
-//    @PostMapping("change-password")
-//    public ResponseEntity<String> changePassword(@RequestBody EmailDto emailDto){
-//        return clientService.changePassword(emailDto.getEmail());
-//    }
+    @PostMapping("change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePasswordDto, @RequestHeader("rapid-transit") String token) throws Exception {
+        return clientService.changePassword(changePasswordDto, token);
+    }
 
 }
